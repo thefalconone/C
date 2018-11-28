@@ -1,0 +1,42 @@
+{
+"salles": [
+	{ "numero": 1, "type": 1, "reservations": [
+		]
+	},
+	{ "numero": 6, "type": 2, "reservations": [
+		]
+	},
+	{ "numero": 8, "type": 1, "reservations": [
+		]
+	},
+	{ "numero": 12, "type": 1, "reservations": [
+		]
+	},
+	{ "numero": 15, "type": 1, "reservations": [
+		]
+	},
+	{ "numero": 101, "type": 0, "reservations": [
+		]
+	},
+	{ "numero": 102, "type": 0, "reservations": [
+		]
+	},
+	{ "numero": 201, "type": 2, "reservations": [
+		]
+	}
+],
+"enseignements": [
+{"cours": "Math"},
+{"cours": "StructureDeDonnee"},
+{"cours": "Graphes"},
+{"cours": "Systeme"},
+{"cours": "AnalyseDeDonnees"},
+{"cours": "GrandsSystemesLineaires"},
+{"cours": "POO"},
+{"cours": "Optique"},
+{"cours": "Meca"},
+{"cours": "Electromagnetisme"},
+{"cours": "Circuit"},
+{"cours": "Thermodynamique"},
+]
+}

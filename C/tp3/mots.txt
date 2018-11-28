@@ -1,0 +1,24 @@
+mots acceptés:
+abb, aabb, babb, aaabb
+
+pas acceptés:
+a, bab
+
+ParcoursLargeur(Graphe G, Sommet s):
+	f = CreerFile();
+	f.enfiler(s);
+	marquer(s);
+	tant que la file est non vide
+		s = f.defiler();
+		afficher(s);
+		pour tout voisin t de s dans G
+			si t non marqué
+				f.enfiler(t);
+				marquer(t);
+
+explorer(graphe G, sommet s)
+	marquer le sommet s
+	afficher(s)
+		pour tout sommet t fils du sommet s
+			si t n'est pas marqué alors
+				explorer(G, t);
