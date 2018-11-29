@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 typedef struct arc{
 	char etiq;
@@ -20,3 +21,5 @@ void retirer_arc(graphe* g, char l, int debut, int fin);
 //retourne l'etat atteint à partir d'un état et une etiquette
 int transiter(graphe* g, char l, int debut);
 void afficher(graphe* g);
+graphe* lire_graphe(FILE* fich);
+void ecrire_graphe(graphe* g, FILE* fich);

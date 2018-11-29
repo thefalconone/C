@@ -1,9 +1,8 @@
 #include "automate.h"
 
-automate* creer_automate(char* alphabet, int etat_init, int etat_final){
+automate* creer_automate(graphe* g, char* alphabet, int etat_init, int etat_final){
 	automate* a=malloc(sizeof(*a));
-	a->g=creer_graphe(4);
-	remplir(a->g);
+	a->g=g;
 	a->alphabet=malloc(sizeof(char)*strlen(alphabet));
 	strcpy(a->alphabet,alphabet);
 	a->etat_init=etat_init;
@@ -93,16 +92,77 @@ void profondeur(automate* a, int max){
 	profondeur_recursif(a,p,max);
 }
 
-/*	affiche si un mot est accepté
+automate* lire_automate(FILE* fich){
+	int taillemax=1000;
+
+	graphe* g=lire_graphe(fich);
+
+	char alphabet[taillemax];
+	fgets(alphabet,taillemax,fich);
+
+	char ligne[taillemax];
+	fgets(ligne,taillemax,fich);
+	int etat_init=atoi(ligne);
+	fgets(ligne,taillemax,fich);
+	int etat_final=atoi(ligne);
+
+	automate* a=creer_automate(g,alphabet,etat_init,etat_final);
+	return a;
+}
+
+void ecrire_automate(automate* a, FILE* fich){
+	int taillemax=1000;
+
+	ecrire_graphe(a->g,fich);
+
+	fputs(a->alphabet,fich);
+
+	char etat_init[taillemax];
+	sprintf(etat_init,"%d",a->etat_init);
+	fputs(etat_init,fich);
+
+	char etat_final[taillemax];
+	sprintf(etat_final,"%d",a->etat_final);
+	fputs(etat_final,fich);
+}
+
+/*
+affiche si un mot est accepté
 		automate* a=creer_automate(0,3);
 		printf("mot accepte : %d\n", accepte(a,argv[1]));
-*/
-int main(int argc, char* argv[]){
-	if(argc==3){
+
+affiche exploration largeur et profondeur
 		automate* a=creer_automate(argv[1],0,3);
 		afficher(a->g);
 		largeur(a,atoi(argv[2]));
 		profondeur(a,atoi(argv[2]));
+
+lit un fichier graphe et l'ecrit ailleurs
+		FILE* lect;
+		lect=fopen("fichiers/graphe.txt","r");
+		graphe* g=lire_graphe(lect);
+		fclose(lect);
+		afficher(g);
+
+		FILE* ecr;
+		ecr=fopen("fichiers/graphe2.txt","w+");
+		ecrire_graphe(g,ecr);
+		fclose(ecr);
+*/
+int main(int argc, char* argv[]){
+	if(argc==3){
+		FILE* lect;
+		lect=fopen(argv[1],"r");
+		automate* a=lire_automate(lect);
+		fclose(lect);
+		afficher(a->g);
+		largeur(a,atoi(argv[2]));
+		profondeur(a,atoi(argv[2]));
+
+		FILE* ecr;
+		ecr=fopen("fichiers/automate2.txt","w+");
+		ecrire_automate(a,ecr);
+		fclose(ecr);
 	}
 	else{ printf("il n'y a pas le mot en paramètre\n"); }
 	

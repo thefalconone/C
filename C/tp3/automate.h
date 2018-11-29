@@ -1,4 +1,3 @@
-#include <string.h>
 #include "graphe.h"
 
 typedef struct automate{

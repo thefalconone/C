@@ -91,3 +91,47 @@ void afficher(graphe* g){
 		printf("\n");
 	}
 }
+
+graphe* lire_graphe(FILE* fich){
+	int taillemax=1000;
+	char ligne[taillemax];
+
+	//première ligne: nb de sommets
+	fgets(ligne,taillemax,fich);
+	int nbsommets=atoi(ligne);
+	graphe* g=creer_graphe(nbsommets);
+
+	for(int i=0; i<nbsommets; i++){//parcours des sommets
+		fgets(ligne,taillemax,fich);
+		int nbarcs=strlen(ligne);
+		for(int j=0; j<nbarcs/2; j++){//parcours des arcs
+			ajouter_arc(g, ligne[j*2+1], i, ligne[j*2]-48);
+		}
+	}
+	return g;
+}
+
+void ecrire_graphe(graphe* g, FILE* fich){
+	int taillemax=1000;
+	char nbs[taillemax];
+	//première ligne: nb de sommets
+	sprintf(nbs,"%d",g->nbs);
+	fputs(nbs,fich);
+
+	for(int i=0; i<g->nbs; i++){//parcours des arcs
+		char ligne[taillemax];
+		if(g->adj[i]!=NULL){
+			arc* a=g->adj[i];
+			char morceau[taillemax];
+			while(a->suiv!=NULL){
+				sprintf(morceau,"%d%c", a->voisin, a->etiq);
+				strcat(ligne,morceau);
+				a=a->suiv;
+			}
+			sprintf(morceau,"%d%c", a->voisin, a->etiq);
+			strcat(ligne,morceau);
+		}
+		//ligne[strlen(ligne)]='\n';
+		fputs(ligne,fich);
+	}
+}
