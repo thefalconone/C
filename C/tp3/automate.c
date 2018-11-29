@@ -26,14 +26,22 @@ int accepte(automate* a, char* mot){
 	return 1;
 }
 
-void l(automate* a, int max){
+char* concat(char *s1, char *s2){//concatene 2 strings
+    char *rep = malloc(strlen(s1) + strlen(s2) + 1);//+1 pour le \0
+    strcpy(rep, s1);
+    strcat(rep, s2);
+    return rep;
+}
+
+void largeur(automate* a, int max){
+	printf("mots acceptés largeur:\n");
 	file* f=Initialise();
-	Ajoute(f,a->etat_init, "", 0);
+	Ajoute(f,a->etat_init, "", a->etat_init);
 
 	while(Taille(f)){//tant que la file n'est pas vide
 		cell* c=Retire(f);
 
-		if(c->sommet==a->etat_final){
+		if(c->sommet==a->etat_final){//affichage des mots acceptés
 			printf("%s\n", c->chemin);
 		}
 
@@ -47,11 +55,42 @@ void l(automate* a, int max){
 				int potentielvoisin=transiter(a->g,lettre[0],c->sommet);
 
 				if(potentielvoisin!=-1){//si le voisin existe, on l'ajoute à la liste
-					Ajoute(f,potentielvoisin, strcat(c->chemin,lettre), c->profondeur+1);
+					Ajoute(f,potentielvoisin, concat(c->chemin,lettre), c->profondeur+1);
 				}
 			}
 		}
 	}
+}
+
+void profondeur_recursif(automate* a, pile* p, int max){
+	cell* c=Retirep(p);
+
+	if(c->sommet==a->etat_final){//affichage des mots acceptés
+		printf("%s\n", c->chemin);
+	}
+
+	if(c->profondeur<max){
+		for(int i=0; i<strlen(a->alphabet); i++){//tout l'alphabet
+
+			char lettre[2];
+			lettre[0]=a->alphabet[i];
+			lettre[1]='\0';
+
+			int potentielvoisin=transiter(a->g,lettre[0],c->sommet);
+
+			if(potentielvoisin!=-1){//si le voisin existe, on l'ajoute à la liste
+				Ajoutep(p,potentielvoisin, concat(c->chemin,lettre), c->profondeur+1);
+				profondeur_recursif(a,p,max);
+			}
+		}
+	}
+}
+
+void profondeur(automate* a, int max){
+	pile* p=Initialisep();
+	Ajoutep(p,a->etat_init, "", a->etat_init);
+	printf("mots acceptés profondeur:\n");
+	profondeur_recursif(a,p,max);
 }
 
 /*	affiche si un mot est accepté
@@ -62,7 +101,8 @@ int main(int argc, char* argv[]){
 	if(argc==3){
 		automate* a=creer_automate(argv[1],0,3);
 		afficher(a->g);
-		l(a,atoi(argv[2]));
+		largeur(a,atoi(argv[2]));
+		profondeur(a,atoi(argv[2]));
 	}
 	else{ printf("il n'y a pas le mot en paramètre\n"); }
 	

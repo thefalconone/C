@@ -20,18 +20,28 @@ typedef struct file{
 	struct cell* fin;
 }file;
 
+typedef struct pile{
+	struct cell* debut;
+}pile;
+
 file* Initialise(){
-	file* f=malloc(sizeof(struct file));
+	file* f=malloc(sizeof(*f));
 	f->debut=NULL;
 	f->fin=NULL;
 	return f;
+}
+
+pile* Initialisep(){
+	pile* p=malloc(sizeof(*p));
+	p->debut=NULL;
+	return p;
 }
 
 void Ajoute(file* f, int sommet, char* chemin, int profondeur){
 	if(f->debut==NULL){//si y'a rien dans la file
 		cell* c=malloc(sizeof(*c));
 		c->sommet=sommet;
-		c->chemin=malloc(sizeof(char)*strlen(chemin));
+		c->chemin=malloc(sizeof(char)*strlen(chemin)+1);
 		strcpy(c->chemin, chemin);
 		c->profondeur=profondeur;
 		c->suiv=NULL;
@@ -41,7 +51,7 @@ void Ajoute(file* f, int sommet, char* chemin, int profondeur){
 	else{
 		cell* c=malloc(sizeof(*c));
 		c->sommet=sommet;
-		c->chemin=malloc(sizeof(char)*strlen(chemin));
+		c->chemin=malloc(sizeof(char)*strlen(chemin)+1);
 		strcpy(c->chemin, chemin);
 		c->profondeur=profondeur;
 		c->suiv=NULL;
@@ -50,9 +60,27 @@ void Ajoute(file* f, int sommet, char* chemin, int profondeur){
 	}
 }
 
+void Ajoutep(pile* p, int sommet, char* chemin, int profondeur){
+	cell* c=malloc(sizeof(*c));
+	c->sommet=sommet;
+	c->chemin=malloc(sizeof(char)*strlen(chemin)+1);
+	strcpy(c->chemin, chemin);
+	c->profondeur=profondeur;
+
+	c->suiv=p->debut;
+	p->debut=c;
+}
+
 cell* Retire(file* f){
 	cell* retire=f->debut;
 	f->debut=f->debut->suiv;
+	//free(retire);
+	return retire;
+}
+
+cell* Retirep(pile* p){
+	cell* retire=p->debut;
+	p->debut=p->debut->suiv;
 	//free(retire);
 	return retire;
 }
@@ -75,6 +103,20 @@ int Taille(file* f){
 
 	if(f->debut!=NULL){
 		cell* c=f->debut;
+		rep++;
+		while(c->suiv!=NULL){
+			rep++;
+			c=c->suiv;
+		}
+	}
+	return rep;
+}
+
+int Taillep(pile* p){
+	int rep=0;
+
+	if(p->debut!=NULL){
+		cell* c=p->debut;
 		rep++;
 		while(c->suiv!=NULL){
 			rep++;
