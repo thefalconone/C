@@ -29,8 +29,9 @@ file* Initialise(){
 
 void Ajoute(file* f, int sommet, char* chemin, int profondeur){
 	if(f->debut==NULL){//si y'a rien dans la file
-		cell* c=malloc(sizeof(struct cell));
+		cell* c=malloc(sizeof(*c));
 		c->sommet=sommet;
+		c->chemin=malloc(sizeof(char)*strlen(chemin));
 		strcpy(c->chemin, chemin);
 		c->profondeur=profondeur;
 		c->suiv=NULL;
@@ -38,8 +39,9 @@ void Ajoute(file* f, int sommet, char* chemin, int profondeur){
 		f->fin=c;
 	}
 	else{
-		cell* c=malloc(sizeof(struct cell));
+		cell* c=malloc(sizeof(*c));
 		c->sommet=sommet;
+		c->chemin=malloc(sizeof(char)*strlen(chemin));
 		strcpy(c->chemin, chemin);
 		c->profondeur=profondeur;
 		c->suiv=NULL;
@@ -54,17 +56,20 @@ cell* Retire(file* f){
 	//free(retire);
 	return retire;
 }
-/*
-void Affiche(file* f){
-	cell* c=f->debut;
-	printf(" %d",c->v);
 
-	while(c->suiv!=NULL){
-		c=c->suiv;
-		printf(" %d",c->v);
+void Affiche(file* f){
+	printf("file: \n");
+	if(f->debut!=NULL){
+		cell* c=f->debut;
+		while(c->suiv!=NULL){
+			printf("sommet:%d chemin:%s profondeur:%d ",c->sommet, c->chemin, c->profondeur);
+			c=c->suiv;
+		}
+		printf("sommet:%d chemin:%s profondeur:%d ",c->sommet, c->chemin, c->profondeur);
 	}
+	else{printf("vide\n");}
 }
-*/
+
 int Taille(file* f){
 	int rep=0;
 

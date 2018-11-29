@@ -13,6 +13,7 @@ typedef struct graphe{
 }graphe;
 
 graphe* creer_graphe(int nb);
+void remplir(graphe* g);
 void ajouter_arc(graphe* g, char etiq, int debut, int fin);
 int arc_existe(graphe* g, char l, int debut, int fin);
 void retirer_arc(graphe* g, char l, int debut, int fin);

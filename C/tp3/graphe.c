@@ -1,25 +1,32 @@
 #include "graphe.h"
 
+void remplir(graphe* g){
+	ajouter_arc(g,'b',0,0);
+	ajouter_arc(g,'a',0,1);
+	ajouter_arc(g,'a',1,1);
+	ajouter_arc(g,'b',1,2);
+	ajouter_arc(g,'a',2,1);
+	ajouter_arc(g,'b',2,3);
+	ajouter_arc(g,'a',3,1);
+	ajouter_arc(g,'b',3,0);
+}
+
 graphe* creer_graphe(int nb){
-	printf("debut creergraphe\n");
 	graphe* g=malloc(sizeof(*g));
 	g->nbs=nb;
 	g->adj=malloc(sizeof(*(g->adj))*nb);
 	for(int i=0; i<nb; i++){
 		g->adj[i]=NULL;
 	}
-	printf("fin creer\n");
 	return g;
 }
 
 void ajouter_arc(graphe* g, char etiq, int debut, int fin){
-	afficher(g);
-	arc* a=malloc(sizeof(struct arc));
+	arc* a=malloc(sizeof(*a));
 	a->etiq=etiq;
 	a->voisin=fin;
 	a->suiv=g->adj[debut];
 	g->adj[debut]=a;
-	//printf("%d %c\n", g->adj[debut]->voisin, g->adj[debut]->etiq);
 }
 
 void retirer_arc(graphe* g, char l, int debut, int fin){
@@ -50,29 +57,37 @@ int arc_existe(graphe* g, char l, int debut, int fin){
 
 int transiter(graphe* g, char l, int debut){
 	int rep=-1;
-	arc* a=g->adj[debut];
-	while(a!=NULL){
+
+	if(g->adj[debut]!=NULL){
+
+		arc* a=g->adj[debut];
+
+		while(a->suiv!=NULL){
+			if(a->etiq==l){
+				rep=a->voisin;
+			}
+			a=a->suiv;
+		}
+
 		if(a->etiq==l){
 			rep=a->voisin;
 		}
-		a=a->suiv;
 	}
 	return rep;
 }
 
 void afficher(graphe* g){
-	printf("graphe: g->nbs:%d\n",g->nbs);
-	char s[1000];
-	scanf("%s",s);
-	int i;
-	for(i=0; i<g->nbs; i++){
+	printf("graphe: \n");
+	for(int i=0; i<g->nbs; i++){
 		printf("%d -> ", i);
-		arc* a=g->adj[i];
-		while(a!=NULL || printf("j")){
+		if(g->adj[i]!=NULL){
+			arc* a=g->adj[i];
+			while(a->suiv!=NULL){
+				printf("%d:%c ", a->voisin, a->etiq);
+				a=a->suiv;
+			}
 			printf("%d:%c ", a->voisin, a->etiq);
-			a=a->suiv;
 		}
 		printf("\n");
 	}
-	printf("fin affichage");
 }
