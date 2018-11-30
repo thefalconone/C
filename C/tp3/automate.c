@@ -35,7 +35,7 @@ char* concat(char *s1, char *s2){//concatene 2 strings
 void largeur(automate* a, int max){
 	printf("mots acceptés largeur:\n");
 	file* f=Initialise();
-	Ajoute(f,a->etat_init, "", a->etat_init);
+	Ajoute(f,a->etat_init, "", 0);
 
 	while(Taille(f)){//tant que la file n'est pas vide
 		cell* c=Retire(f);
@@ -58,6 +58,7 @@ void largeur(automate* a, int max){
 				}
 			}
 		}
+		free(c);
 	}
 }
 
@@ -83,11 +84,12 @@ void profondeur_recursif(automate* a, pile* p, int max){
 			}
 		}
 	}
+	free(c);
 }
 
 void profondeur(automate* a, int max){
 	pile* p=Initialisep();
-	Ajoutep(p,a->etat_init, "", a->etat_init);
+	Ajoutep(p,a->etat_init, "", 0);
 	printf("mots acceptés profondeur:\n");
 	profondeur_recursif(a,p,max);
 }
@@ -120,6 +122,7 @@ void ecrire_automate(automate* a, FILE* fich){
 	char etat_init[taillemax];
 	sprintf(etat_init,"%d",a->etat_init);
 	fputs(etat_init,fich);
+	fputc('\n',fich);
 
 	char etat_final[taillemax];
 	sprintf(etat_final,"%d",a->etat_final);
@@ -127,10 +130,6 @@ void ecrire_automate(automate* a, FILE* fich){
 }
 
 /*
-affiche si un mot est accepté
-		automate* a=creer_automate(0,3);
-		printf("mot accepte : %d\n", accepte(a,argv[1]));
-
 affiche exploration largeur et profondeur
 		automate* a=creer_automate(argv[1],0,3);
 		afficher(a->g);
@@ -150,21 +149,28 @@ lit un fichier graphe et l'ecrit ailleurs
 		fclose(ecr);
 */
 int main(int argc, char* argv[]){
-	if(argc==3){
-		FILE* lect;
-		lect=fopen(argv[1],"r");
-		automate* a=lire_automate(lect);
-		fclose(lect);
-		afficher(a->g);
-		largeur(a,atoi(argv[2]));
-		profondeur(a,atoi(argv[2]));
+	if(argc==2){
 
-		FILE* ecr;
-		ecr=fopen("fichiers/automate2.txt","w+");
-		ecrire_automate(a,ecr);
-		fclose(ecr);
+		FILE* lect=NULL;
+		lect=fopen(argv[1],"r");
+
+		if(lect!=NULL){
+			automate* a=lire_automate(lect);
+			fclose(lect);
+
+			menu(a);
+
+			printf("Emplacement et nom du fichier de sauvegarde :");
+			char s[100];
+			scanf("%s",s);
+			FILE* ecr;
+			ecr=fopen(s,"w+");
+			ecrire_automate(a,ecr);
+			fclose(ecr);
+		}
+		else{ printf("Le fichier n'existe pas\n"); }
 	}
-	else{ printf("il n'y a pas le mot en paramètre\n"); }
+	else{ printf("il n'y a pas les bons paramètres\n"); }
 	
 	return 0;
 }

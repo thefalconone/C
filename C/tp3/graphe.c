@@ -112,26 +112,21 @@ graphe* lire_graphe(FILE* fich){
 }
 
 void ecrire_graphe(graphe* g, FILE* fich){
-	int taillemax=1000;
-	char nbs[taillemax];
 	//première ligne: nb de sommets
-	sprintf(nbs,"%d",g->nbs);
-	fputs(nbs,fich);
+	fputc(g->nbs+48,fich);
+	fputc('\n',fich);
 
 	for(int i=0; i<g->nbs; i++){//parcours des arcs
-		char ligne[taillemax];
 		if(g->adj[i]!=NULL){
 			arc* a=g->adj[i];
-			char morceau[taillemax];
 			while(a->suiv!=NULL){
-				sprintf(morceau,"%d%c", a->voisin, a->etiq);
-				strcat(ligne,morceau);
+				fputc(a->voisin+48, fich);
+				fputc(a->etiq, fich);
 				a=a->suiv;
 			}
-			sprintf(morceau,"%d%c", a->voisin, a->etiq);
-			strcat(ligne,morceau);
+			fputc(a->voisin+48, fich);
+			fputc(a->etiq, fich);
 		}
-		//ligne[strlen(ligne)]='\n';
-		fputs(ligne,fich);
+		fputc('\n',fich);
 	}
 }
