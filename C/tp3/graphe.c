@@ -79,12 +79,12 @@ int arc_existe(graphe* g, char l, int debut, int fin){
 
 int transiter(graphe* g, char l, int debut){
 	int rep=-1;
-
-	if(g->adj[debut]!=NULL){
+	printf("etiq:%c debut:%d",l,debut);
+	if(g->adj[debut]!=NULL){//si il y a au moins un arc
 
 		arc* a=g->adj[debut];
 
-		while(a->suiv!=NULL){
+		while(a->suiv!=NULL){//tant qu'on est pas à l'avant dernier
 			if(a->etiq==l){
 				rep=a->voisin;
 			}
@@ -95,6 +95,7 @@ int transiter(graphe* g, char l, int debut){
 			rep=a->voisin;
 		}
 	}
+	printf(" %d\n", rep);
 	return rep;
 }
 

@@ -51,14 +51,12 @@ void Ajoutep(pile* p, int sommet, char* chemin, int profondeur){
 cell* Retire(file* f){
 	cell* retire=f->debut;
 	f->debut=f->debut->suiv;
-	//free(retire);
 	return retire;
 }
 
 cell* Retirep(pile* p){
 	cell* retire=p->debut;
 	p->debut=p->debut->suiv;
-	//free(retire);
 	return retire;
 }
 
