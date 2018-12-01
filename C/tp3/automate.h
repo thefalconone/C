@@ -19,6 +19,7 @@ void menu(automate* a);
 int accepte(automate* a, char* mot);
 void largeur(automate* a, int max);
 void profondeur(automate* a, int max);
+void afficher_automate(automate* a);
 
 typedef struct file{
 	struct cell* debut;

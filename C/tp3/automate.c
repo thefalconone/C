@@ -33,7 +33,7 @@ char* concat(char *s1, char *s2){//concatene 2 strings
 }
 
 void largeur(automate* a, int max){
-	printf("mots acceptés largeur:\n");
+	printf("Mots acceptés largeur:\n");
 	file* f=Initialise();
 	Ajoute(f,a->etat_init, "", 0);
 
@@ -41,7 +41,7 @@ void largeur(automate* a, int max){
 		cell* c=Retire(f);
 
 		if(c->sommet==a->etat_final){//affichage des mots acceptés
-			printf("%s\n", c->chemin);
+			printf("\"%s\"\n", c->chemin);
 		}
 
 		if(c->profondeur<max){
@@ -66,7 +66,7 @@ void profondeur_recursif(automate* a, pile* p, int max){
 	cell* c=Retirep(p);
 
 	if(c->sommet==a->etat_final){//affichage des mots acceptés
-		printf("%s\n", c->chemin);
+		printf("\"%s\"\n", c->chemin);
 	}
 
 	if(c->profondeur<max){
@@ -90,19 +90,20 @@ void profondeur_recursif(automate* a, pile* p, int max){
 void profondeur(automate* a, int max){
 	pile* p=Initialisep();
 	Ajoutep(p,a->etat_init, "", 0);
-	printf("mots acceptés profondeur:\n");
+	printf("Mots acceptés profondeur:\n");
 	profondeur_recursif(a,p,max);
 }
 
 automate* lire_automate(FILE* fich){
 	int taillemax=1000;
+	char ligne[taillemax];
 
 	graphe* g=lire_graphe(fich);
 
 	char alphabet[taillemax];
 	fgets(alphabet,taillemax,fich);
+	alphabet[strlen(alphabet)-1]='\0';
 
-	char ligne[taillemax];
 	fgets(ligne,taillemax,fich);
 	int etat_init=atoi(ligne);
 	fgets(ligne,taillemax,fich);
@@ -118,6 +119,7 @@ void ecrire_automate(automate* a, FILE* fich){
 	ecrire_graphe(a->g,fich);
 
 	fputs(a->alphabet,fich);
+	fputc('\n',fich);
 
 	char etat_init[taillemax];
 	sprintf(etat_init,"%d",a->etat_init);
@@ -129,32 +131,19 @@ void ecrire_automate(automate* a, FILE* fich){
 	fputs(etat_final,fich);
 }
 
-/*
-affiche exploration largeur et profondeur
-		automate* a=creer_automate(argv[1],0,3);
-		afficher(a->g);
-		largeur(a,atoi(argv[2]));
-		profondeur(a,atoi(argv[2]));
+void afficher_automate(automate* a){
+	printf("automate:\nalphabet=%s\nétat initial=%d\nétat final=%d\n\n",a->alphabet,a->etat_init,a->etat_final);
+	afficher(a->g);
+	printf("\n");
+}
 
-lit un fichier graphe et l'ecrit ailleurs
-		FILE* lect;
-		lect=fopen("fichiers/graphe.txt","r");
-		graphe* g=lire_graphe(lect);
-		fclose(lect);
-		afficher(g);
-
-		FILE* ecr;
-		ecr=fopen("fichiers/graphe2.txt","w+");
-		ecrire_graphe(g,ecr);
-		fclose(ecr);
-*/
 int main(int argc, char* argv[]){
 	if(argc==2){
 
 		FILE* lect=NULL;
 		lect=fopen(argv[1],"r");
 
-		if(lect!=NULL){
+		if(lect!=NULL){//si le fichier existe
 			automate* a=lire_automate(lect);
 			fclose(lect);
 
@@ -162,6 +151,7 @@ int main(int argc, char* argv[]){
 
 			printf("Emplacement et nom du fichier de sauvegarde :");
 			char s[100];
+			fpurge(stdin);
 			scanf("%s",s);
 			FILE* ecr;
 			ecr=fopen(s,"w+");
@@ -170,7 +160,9 @@ int main(int argc, char* argv[]){
 		}
 		else{ printf("Le fichier n'existe pas\n"); }
 	}
-	else{ printf("il n'y a pas les bons paramètres\n"); }
+	else{
+		printf("Usage: %s <fichier de l'automate>",argv[0]);
+	}
 	
 	return 0;
 }

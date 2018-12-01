@@ -30,16 +30,38 @@ void ajouter_arc(graphe* g, char etiq, int debut, int fin){
 }
 
 void retirer_arc(graphe* g, char l, int debut, int fin){
-	int done=0;
-	arc* a=g->adj[debut];
-	while(a->suiv!=NULL && !done){
-		if(a->suiv->etiq==l && a->suiv->voisin==fin){
-			arc* temp=a->suiv;
-			a->suiv=a->suiv->suiv;
-			free(temp);
-			done=1;
+	if(debut<g->nbs && g->adj[debut]!=NULL){//si il y a au moins un arc
+		int done=0;
+		arc* a=g->adj[debut];
+		if(a->suiv!=NULL){//si il y a au moins 2 arcs
+			while(!done && a->suiv->suiv!=NULL){//tant qu'on est pas à l'avant dernier
+				if(a->suiv->etiq==l && a->suiv->voisin==fin){//si l'arc suivant est le bon arc
+					arc* temp=a->suiv;
+					a->suiv=a->suiv->suiv;
+					free(temp);
+					done=1;
+				}
+				a=a->suiv;
+			}
+			//on est à l'avant dernier
+			if(a->suiv->etiq==l && a->suiv->voisin==fin){//si le dernier est le bon
+				arc* temp=a->suiv;
+				a->suiv=NULL;
+				free(temp);
+				done=1;
+			}
+			if(g->adj[debut]->etiq==l && g->adj[debut]->voisin==fin){//si le bon arc était le premier
+				arc* temp=g->adj[debut];
+				g->adj[debut]=g->adj[debut]->suiv;
+				free(temp);
+			}
 		}
-		a=a->suiv;
+		else{//si il n'y a qu'un arc
+			if(a->etiq==l && a->voisin==fin){//et que c'est le bon
+				g->adj[debut]=NULL;
+				free(a);
+			}
+		}
 	}
 }
 
