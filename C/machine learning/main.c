@@ -1,15 +1,5 @@
 #include "main.h"
 
-void affichereng(engine e){
-	printf("\nengine:\nnom: %s\nmass: %.3f thrust: %d isp: %d cost: %d\n",e.name, e.mass, e.thrust, e.isp, e.cost);
-	if(e.typecarb==solidfuel){ printf("sf: %d\n", e.sf); }
-	if(e.typecarb==lfox){ printf("lf: %d ox: %d\n", e.lf, e.ox); }
-}
-
-void afficherft(fueltank ft){
-	printf("\nfuel tank:\nnom: %s\nmass: %.3f cost: %d lf: %d ox: %d mo: %d\n",ft.name, ft.drymass, ft.cost, ft.lf, ft.ox, ft.mo);
-}
-
 int main(){
 	FILE* fueltanks;
 	FILE* engines;
@@ -22,12 +12,19 @@ int main(){
 		engine* listeng=lire_eng(engines);
 		fueltank* listft=lire_ft(fueltanks);
 
-		for(int i=0; i<3; i++){
+		for(int i=0; i<24; i++){
 			affichereng(listeng[i]);
+		}
+		for(int i=0; i<42; i++){
 			afficherft(listft[i]);
 		}
 
 		stage* fusee=initialisefusee();
+		//il y a 42 fuel tanks et 24 engines
+		addstage(fusee, 1, &listft[rand()%43], listeng[rand()%25]);
+		addstage(fusee, 1, &listft[rand()%43], listeng[rand()%25]);
+		addstage(fusee, 1, &listft[rand()%43], listeng[rand()%25]);
+		afficherfusee(fusee);
 	}
 	else{
 		printf("fueltank.txt et/ou engine.txt n'existe pas, création des fichiers...\n");

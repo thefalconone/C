@@ -36,21 +36,22 @@ engine* lire_eng(FILE* engines){
 		strcpynb(ligne,ligne,7);
 		listeng[i].mass=atof(ligne);
 
-		//amount si srb, isp sinon
+		//amount si srb ou lfox, isp sinon
 		fgets(ligne, taillemax, engines);
 		
-		listeng[i].typecarb=rien;
+		listeng[i].sf=0;
+		listeng[i].lf=0;
+		listeng[i].ox=0;
 
 		if(ligne[0]=='a'){//soit srb soit tank
-			listeng[i].typecarb=solidfuel;
 			//elimination de "amount = "
 			strcpynb(ligne,ligne,9);
 			listeng[i].sf=atoi(ligne);
 			fgets(ligne, taillemax, engines);//lit l'isp si srb, le 2e amount sinon
 
-			if(ligne[0]=='a'){//lfox
-				listeng[i].typecarb=lfox;
+			if(ligne[0]=='a'){//si 2e amount : c'est obligé lfox
 				listeng[i].lf=listeng[i].sf;
+				listeng[i].sf=0;
 				//elimination de "amount = "
 				strcpynb(ligne,ligne,9);
 				listeng[i].ox=atoi(ligne);
@@ -122,7 +123,6 @@ fueltank* lire_ft(FILE* fueltanks){
 			}
 			else{//lf only
 				listft[i].ox=0;
-				fgets(ligne, taillemax, fueltanks);
 				//elimination de "amount = "
 				strcpynb(ligne,ligne,9);
 				listft[i].lf=atoi(ligne);

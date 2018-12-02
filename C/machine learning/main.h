@@ -2,12 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-typedef enum typecarb{ rien=0, solidfuel=1, lfox=2 }typecarb;
-
 typedef struct engine{
 	char* name;
 	float mass;
-	typecarb type;
 	int thrust, isp, cost, typecarb, lf, ox, sf;
 }engine;
 
@@ -20,6 +17,7 @@ typedef struct fueltank{
 
 typedef struct stage{
 	float drymass, totalmass;
+	int nbft;
 	fueltank* ft;
 	engine e;
 	struct stage* under;
@@ -31,4 +29,7 @@ fueltank* lire_ft(FILE* fueltanks);
 
 //fusee.c
 stage* initialisefusee();
-void addstage(stage* f, fueltank* ft, engine e);
+void addstage(stage* s, int nbft, fueltank* ft, engine e);
+void afficherfusee(stage* s);
+void afficherft(fueltank ft);
+void affichereng(engine e);
