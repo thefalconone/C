@@ -1,0 +1,236 @@
+24 tempcfg.txt
+name = smallRadialEngine
+cost = 400
+mass = 0.09
+2
+name = LiquidFuel
+name = Oxidizer
+ratio = 0.9
+ratio = 1.1
+key = 0 290
+maxThrust = 16
+name = liquidEngineMini
+cost = 240
+mass = 0.1
+2
+name = LiquidFuel
+name = Oxidizer
+ratio = 0.9
+ratio = 1.1
+key = 0 320
+maxThrust = 20
+name = toroidalAerospike
+cost = 3850
+mass = 1.0
+3
+name = LiquidFuel
+name = Oxidizer
+name = ElectricCharge
+ratio = 0.9
+ratio = 1.1
+key = 0 340 -50 -73.71224
+maxThrust = 180
+name = microEngine
+cost = 110
+mass = 0.02
+2
+name = LiquidFuel
+name = Oxidizer
+ratio = 0.9
+ratio = 1.1
+key = 0 315
+maxThrust = 2
+name = radialEngineMini
+cost = 120
+mass = 0.02
+2
+name = LiquidFuel
+name = Oxidizer
+ratio = 0.9
+ratio = 1.1
+key = 0 290
+maxThrust = 2
+name = liquidEngine3
+cost = 390
+mass = 0.5
+2
+name = LiquidFuel
+name = Oxidizer
+ratio = 0.9
+ratio = 1.1
+key = 0 345
+maxThrust = 60
+name = nuclearEngine
+cost = 10000
+mass = 3
+2
+name = LiquidFuel
+name = ElectricCharge
+ratio = 0.9
+key = 0 800
+maxThrust = 60
+name = liquidEngine
+cost = 1100
+mass = 1.25
+3
+name = LiquidFuel
+name = Oxidizer
+name = ElectricCharge
+ratio = 0.9
+ratio = 1.1
+key = 0 310
+maxThrust = 240
+name = liquidEngine2
+cost = 1200
+mass = 1.5
+3
+name = LiquidFuel
+name = Oxidizer
+name = ElectricCharge
+ratio = 0.9
+ratio = 1.1
+key = 0 320
+maxThrust = 215
+name = liquidEngine1-2
+cost = 13000
+mass = 6
+3
+name = LiquidFuel
+name = Oxidizer
+name = ElectricCharge
+ratio = 0.9
+ratio = 1.1
+key = 0 310
+maxThrust = 1500
+name = radialLiquidEngine1-2
+cost = 820
+mass = 0.9
+2
+name = LiquidFuel
+name = Oxidizer
+ratio = 0.9
+ratio = 1.1
+key = 0 305
+maxThrust = 120
+name = liquidEngine2-2
+cost = 1300
+mass = 1.75
+3
+name = LiquidFuel
+name = Oxidizer
+name = ElectricCharge
+ratio = 0.9
+ratio = 1.1
+key = 0 350
+maxThrust = 250
+name = engineLargeSkipper
+cost = 5300
+mass = 3
+3
+name = LiquidFuel
+name = Oxidizer
+name = ElectricCharge
+ratio = 0.9
+ratio = 1.1
+key = 0 320
+maxThrust = 650
+name = SSME
+cost = 18000
+mass = 4.0
+3
+name = LiquidFuel
+name = Oxidizer
+name = ElectricCharge
+ratio = 0.9
+ratio = 1.1
+key = 0 315
+maxThrust = 1000
+name = MassiveBooster
+cost = 2700
+mass = 4.5
+1
+name = SolidFuel
+ratio = 1.0
+key = 0 220
+maxThrust = 670
+name = omsEngine
+cost = 150
+mass = 0.09
+1
+name = MonoPropellant
+ratio = 0.9
+key = 0 250
+maxThrust = 20
+name = Size2LFB
+cost = 17000
+mass = 10.5
+2
+name = LiquidFuel
+name = Oxidizer
+ratio = 0.9
+ratio = 1.1
+key = 0 300
+maxThrust = 2000
+name = Size3AdvancedEngine
+cost = 25000
+mass = 9.0
+3
+name = LiquidFuel
+name = Oxidizer
+name = ElectricCharge
+ratio = 0.9
+ratio = 1.1
+key = 0 340
+maxThrust = 2000
+name = Size3EngineCluster
+cost = 39000
+mass = 15
+3
+name = LiquidFuel
+name = Oxidizer
+name = ElectricCharge
+ratio = 0.9
+ratio = 1.1
+key = 0 315
+maxThrust = 4000
+name = solidBooster1-1
+cost = 850
+mass = 1.5
+1
+name = SolidFuel
+ratio = 1.0
+key = 0 210
+maxThrust = 300
+name = solidBooster
+cost = 400
+mass = 0.75
+1
+name = SolidFuel
+ratio = 1.0
+key = 0 195
+maxThrust = 227
+name = solidBooster_sm
+cost = 200
+mass = 0.45
+1
+name = SolidFuel
+ratio = 1.0
+key = 0 165
+maxThrust = 192
+name = sepMotor1
+cost = 75
+mass = 0.0125
+1
+name = SolidFuel
+ratio = 1.0
+key = 0 154
+maxThrust = 18
+name = vernierEngine
+cost = 1400
+mass = 0.08
+2
+name = LiquidFuel
+name = Oxidizer
+ratio = 0.9
+ratio = 1.1
+key = 0 260
