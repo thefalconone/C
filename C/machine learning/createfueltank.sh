@@ -10,11 +10,11 @@ do
 	grep ^\.name $fich >> tempfueltank.txt
 	grep ^\.cost $fich >> tempfueltank.txt
 	grep ^\.mass $fich >> tempfueltank.txt
-	grep ^\.\.name -c $fich >> tempfueltank.txt
 	grep ^\.\.name $fich >> tempfueltank.txt
 	grep ^\.\.amount $fich >> tempfueltank.txt
 done
 
-sed -r "s/\t//ig" tempfueltank.txt > tempsanstab.txt
+grep -v .*Module.* tempfueltank.txt > tempsansmod.txt
+sed -r "s/\t//ig" tempsansmod.txt > tempsanstab.txt
 sed -r "s/\r//ig" tempsanstab.txt >> fueltank.txt
 rm -f *temp*

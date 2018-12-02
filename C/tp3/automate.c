@@ -26,10 +26,10 @@ int accepte(automate* a, char* mot){
 }
 
 char* concat(char *s1, char *s2){//concatene 2 strings
-    char *rep = malloc(strlen(s1) + strlen(s2) + 1);//+1 pour le \0
-    strcpy(rep, s1);
-    strcat(rep, s2);
-    return rep;
+	char *rep = malloc(strlen(s1) + strlen(s2) + 1);//+1 pour le \0
+	strcpy(rep, s1);
+	strcat(rep, s2);
+	return rep;
 }
 
 void largeur(automate* a, int max){

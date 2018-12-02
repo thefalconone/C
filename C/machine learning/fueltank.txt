@@ -2,7 +2,6 @@
 name = adapterMk3-Mk2
 cost = 2200
 mass = 1.43
-2
 name = LiquidFuel
 name = Oxidizer
 amount = 900
@@ -10,7 +9,6 @@ amount = 1100
 name = adapterMk3-Size2
 cost = 2500
 mass = 1.79
-2
 name = LiquidFuel
 name = Oxidizer
 amount = 1125
@@ -18,7 +16,6 @@ amount = 1375
 name = adapterMk3-Size2Slant
 cost = 2500
 mass = 1.79
-2
 name = LiquidFuel
 name = Oxidizer
 amount = 1125
@@ -26,7 +23,6 @@ amount = 1375
 name = adapterSize2-Mk2
 cost = 800
 mass = 0.57
-2
 name = LiquidFuel
 name = Oxidizer
 amount = 360
@@ -34,7 +30,6 @@ amount = 440
 name = adapterSize2-Size1
 cost = 800
 mass = 0.57
-2
 name = LiquidFuel
 name = Oxidizer
 amount = 360
@@ -42,7 +37,6 @@ amount = 440
 name = adapterSize2-Size1Slant
 cost = 800
 mass = 0.57
-2
 name = LiquidFuel
 name = Oxidizer
 amount = 360
@@ -50,7 +44,6 @@ amount = 440
 name = adapterSize3-Mk3
 cost = 2500
 mass = 1.79
-2
 name = LiquidFuel
 name = Oxidizer
 amount = 1125
@@ -58,7 +51,6 @@ amount = 1375
 name = fuelTank3-2
 cost = 5750
 mass = 4
-2
 name = LiquidFuel
 name = Oxidizer
 amount = 2880
@@ -66,7 +58,6 @@ amount = 3520
 name = miniFuelTank
 cost = 70
 mass = 0.025
-2
 name = LiquidFuel
 name = Oxidizer
 amount = 18
@@ -74,7 +65,6 @@ amount = 22
 name = fuelTankSmallFlat
 cost = 150
 mass = 0.0625
-2
 name = LiquidFuel
 name = Oxidizer
 amount = 45
@@ -82,7 +72,6 @@ amount = 55
 name = fuelTankSmall
 cost = 275
 mass = 0.125
-2
 name = LiquidFuel
 name = Oxidizer
 amount = 90
@@ -90,7 +79,6 @@ amount = 110
 name = fuelTank
 cost = 500
 mass = 0.25
-2
 name = LiquidFuel
 name = Oxidizer
 amount = 180
@@ -98,7 +86,6 @@ amount = 220
 name = fuelTank_long
 cost = 800
 mass = 0.5
-2
 name = LiquidFuel
 name = Oxidizer
 amount = 360
@@ -106,7 +93,6 @@ amount = 440
 name = toroidalFuelTank
 cost = 175
 mass = 0.0375
-2
 name = LiquidFuel
 name = Oxidizer
 amount = 27
@@ -114,7 +100,6 @@ amount = 33
 name = fuelTank2-2
 cost = 1550
 mass = 1
-2
 name = LiquidFuel
 name = Oxidizer
 amount = 720
@@ -122,7 +107,6 @@ amount = 880
 name = fuelTank1-2
 cost = 3000
 mass = 2
-2
 name = LiquidFuel
 name = Oxidizer
 amount = 1440
@@ -130,7 +114,6 @@ amount = 1760
 name = fuelTank4-2
 cost = 800
 mass = 0.5
-2
 name = LiquidFuel
 name = Oxidizer
 amount = 360
@@ -138,14 +121,11 @@ amount = 440
 name = miniFuselage
 cost = 200
 mass = 0.025
-1
 name = LiquidFuel
 amount = 50
 name = mk2_1m_Bicoupler
 cost = 860
 mass = 0.29
-3
-name = ModuleLiftingSurface
 name = LiquidFuel
 name = Oxidizer
 amount = 180
@@ -153,8 +133,6 @@ amount = 220
 name = mk2_1m_AdapterLong
 cost = 1050
 mass = 0.57
-3
-name = ModuleLiftingSurface
 name = LiquidFuel
 name = Oxidizer
 amount = 360
@@ -162,8 +140,6 @@ amount = 440
 name = mk2SpacePlaneAdapter
 cost = 550
 mass = 0.29
-3
-name = ModuleLiftingSurface
 name = LiquidFuel
 name = Oxidizer
 amount = 180
@@ -171,8 +147,6 @@ amount = 220
 name = mk2FuselageLongLFO
 cost = 1450
 mass = 0.57
-3
-name = ModuleLiftingSurface
 name = LiquidFuel
 name = Oxidizer
 amount = 360
@@ -180,15 +154,11 @@ amount = 440
 name = mk2Fuselage
 cost = 1450
 mass = 0.57
-2
-name = ModuleLiftingSurface
 name = LiquidFuel
 amount = 800
 name = mk2FuselageShortLFO
 cost = 750
 mass = 0.29
-3
-name = ModuleLiftingSurface
 name = LiquidFuel
 name = Oxidizer
 amount = 180
@@ -196,29 +166,20 @@ amount = 220
 name = mk2FuselageShortLiquid
 cost = 750
 mass = 0.29
-2
-name = ModuleLiftingSurface
 name = LiquidFuel
 amount = 400
 name = mk2FuselageShortMono
 cost = 750
 mass = 0.29
-2
-name = ModuleLiftingSurface
 name = MonoPropellant
 amount = 400
 name = mk3CrewCabin
 cost = 30000
 mass = 6.5
-4
 name = MK3_CrewCab_Int
-name = ModuleScienceExperiment
-name = ModuleScienceContainer
-name = ModuleAnimateGeneric
 name = mk3FuselageLFO_100
 cost = 10000
 mass = 7.14
-2
 name = LiquidFuel
 name = Oxidizer
 amount = 4500
@@ -226,7 +187,6 @@ amount = 5500
 name = mk3FuselageLFO_25
 cost = 2500
 mass =  1.79
-2
 name = LiquidFuel
 name = Oxidizer
 amount = 1125
@@ -234,7 +194,6 @@ amount = 1375
 name = mk3FuselageLFO_50
 cost = 5000
 mass =3.57
-2
 name = LiquidFuel
 name = Oxidizer
 amount = 2250
@@ -242,61 +201,51 @@ amount = 2750
 name = mk3FuselageLF_100
 cost = 17200
 mass = 7.14
-1
 name = LiquidFuel
 amount = 10000
 name = mk3FuselageLF_25
 cost = 4300
 mass = 1.79
-1
 name = LiquidFuel
 amount = 2500
 name = mk3FuselageLF_50
 cost = 8600
 mass = 3.57
-1
 name = LiquidFuel
 amount = 5000
 name = mk3FuselageMONO
 cost = 4300
 mass = 0.71
-1
 name = MonoPropellant
 amount = 1000
 name = RCSTank1-2
 cost = 1300
 mass = 0.4
-1
 name = MonoPropellant
 amount = 750
 name = rcsTankMini
 cost = 200
 mass = 0.05
-1
 name = MonoPropellant
 amount = 80
 name = RCSFuelTank
 cost = 600
 mass = 0.15
-1
 name = MonoPropellant
 amount = 250
 name = radialRCSTank
 cost = 200
 mass = 0.075
-1
 name = MonoPropellant
 amount = 60
 name = rcsTankRadialLong
 cost = 450
 mass = 0.15
-1
 name = MonoPropellant
 amount = 150
 name = Size3LargeTank
 cost = 13000
 mass = 9
-2
 name = LiquidFuel
 name = Oxidizer
 amount = 6480
@@ -304,7 +253,6 @@ amount = 7920
 name = Size3MediumTank
 cost = 6500
 mass = 4.5
-2
 name = LiquidFuel
 name = Oxidizer
 amount = 3240
@@ -312,7 +260,6 @@ amount = 3960
 name = Size3SmallTank
 cost = 3250
 mass = 2.25
-2
 name = LiquidFuel
 name = Oxidizer
 amount = 1620

@@ -10,18 +10,15 @@ do
 	grep ^\.name $fich >> tempengine.txt
 	grep ^\.cost $fich >> tempengine.txt
 	grep ^\.mass $fich >> tempengine.txt
-#nbcarburant
-	grep ^\.\.\.name -c $fich >> tempengine.txt
-#carburant
-	grep ^\.\.\.name $fich >> tempengine.txt
-#ratio
-	grep ^\.\.\.ratio $fich >> tempengine.txt
+#amount(pour les solidfuels)
+	grep ^\.\.amount $fich >> tempengine.txt
 #isp
 	grep ^\.\.\.key...0 $fich >> tempengine.txt
 #thrust
 	grep ^\.\.maxThrust $fich >> tempengine.txt
 done
 
-sed -r "s/\t//ig" tempengine.txt > tempsanstab.txt
+grep -v .*Electric.* tempengine.txt > tempsanselec.txt
+sed -r "s/\t//ig" tempsanselec.txt > tempsanstab.txt
 sed -r "s/\r//ig" tempsanstab.txt >> engine.txt
 rm -f *temp*
