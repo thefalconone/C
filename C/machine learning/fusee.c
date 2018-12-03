@@ -64,7 +64,7 @@ int stagesf(stage* s){
 }
 
 void affichereng(engine e){
-	printf("\nengine: nom: %s mass: %.3f thrust: %d isp: %d cost: %d",e.name, e.mass, e.thrust, e.isp, e.cost);
+	printf("\nengine: %s\n%.3f t	%d kN	%d s	%d $",e.name, e.mass, e.thrust, e.isp, e.cost);
 	if(e.lf){ printf(" lf: %d", e.lf); }
 	if(e.sf){ printf(" lf: %d", e.sf); }
 	if(e.ox){ printf(" lf: %d", e.ox); }
@@ -72,7 +72,7 @@ void affichereng(engine e){
 }
 
 void afficherft(fueltank ft){
-	printf("\nfuel tank: nom: %s mass: %.3f cost: %d lf: %d ox: %d mo: %d\n",ft.name, ft.drymass, ft.cost, ft.lf, ft.ox, ft.mo);
+	printf("\nfuel tank: %s\n%.3f t	%d lf	%d ox	%d mo	%d $",ft.name, ft.drymass, ft.lf, ft.ox, ft.mo, ft.cost);
 }
 
 void afficherstage(stage* s){
@@ -83,11 +83,13 @@ void afficherstage(stage* s){
 }
 
 void afficherfusee(stage* s){
-	while(s->under!=NULL){
-		afficherstage(s);
-		s=s->under;
-	}
+	printf("\nfusee:\n");
+	s=s->under;
 	afficherstage(s);
+	while(s->under!=NULL){
+		s=s->under;
+		afficherstage(s);
+	}
 }
 
 void addstage(stage* s, int nbft, fueltank* ft, engine e){

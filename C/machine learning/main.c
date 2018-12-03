@@ -1,4 +1,5 @@
 #include "main.h"
+#include <time.h>
 
 int main(){
 	FILE* fueltanks;
@@ -12,15 +13,10 @@ int main(){
 		engine* listeng=lire_eng(engines);
 		fueltank* listft=lire_ft(fueltanks);
 
-		for(int i=0; i<24; i++){
-			affichereng(listeng[i]);
-		}
-		for(int i=0; i<42; i++){
-			afficherft(listft[i]);
-		}
-
 		stage* fusee=initialisefusee();
 		//il y a 42 fuel tanks et 24 engines
+		time_t t;
+		srand((unsigned) time(&t));
 		addstage(fusee, 1, &listft[rand()%43], listeng[rand()%25]);
 		addstage(fusee, 1, &listft[rand()%43], listeng[rand()%25]);
 		addstage(fusee, 1, &listft[rand()%43], listeng[rand()%25]);
