@@ -36,6 +36,14 @@ engine* lire_eng(FILE* engines){
 		strcpynb(ligne,ligne,7);
 		listeng[i].mass=atof(ligne);
 
+		//EngineType
+		fgets(ligne, taillemax, engines);
+		//elimination de "EngineType = "
+		if(ligne[13]=='L'){ listeng[i].type=liquid; }
+		else if(ligne[13]=='N'){ listeng[i].type=nuclear; }
+		else if(ligne[13]=='S'){ listeng[i].type=solid; }
+		else{ listeng[i].type=monoprop; }
+
 		//amount si srb ou lfox, isp sinon
 		fgets(ligne, taillemax, engines);
 		
@@ -139,4 +147,44 @@ fueltank* lire_ft(FILE* fueltanks){
 	}
 
 	return listft;
+}
+
+fueltank* lirefttxt(){
+	FILE* fueltanks;
+	fueltanks=fopen("fueltank.txt","r");
+	fueltank* listft;
+
+	//si le fichier s'ouvre correctement
+	if (fueltanks!=NULL){
+		listft=lire_ft(fueltanks);
+	}
+	else{
+		printf("fueltank.txt n'existe pas, création des fichiers...\n");
+		int errft=system("sh createfueltank.sh");
+		if(errft==-1){ printf("Erreur sur le script createfueltank.sh\n"); }
+		else{ printf("Succès, supprimez de la ligne 202 à 206 inclus dans fueltank.txt, puis veuillez relancer le programme\n");}
+		listft=NULL;
+	}
+	fclose(fueltanks);
+	return listft;
+}
+
+engine* lireengtxt(){
+	FILE* engines;
+	engines=fopen("engine.txt","r");
+	engine* listeng;
+
+	//si le fichier s'ouvre correctement
+	if (engines!=NULL){
+		listeng=lire_eng(engines);
+	}
+	else{
+		printf("engine.txt n'existe pas, création des fichiers...\n");
+		int erreng=system("sh createengine.sh");
+		if(erreng==-1){ printf("Erreur sur le script createengine.sh\n"); }
+		else{ printf("Succès, veuillez relancer le programme\n");}
+		listeng=NULL;
+	}
+	fclose(engines);
+	return listeng;
 }

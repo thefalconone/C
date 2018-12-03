@@ -10,6 +10,7 @@ do
 	grep ^\.name $fich >> tempengine.txt
 	grep ^\.cost $fich >> tempengine.txt
 	grep ^\.mass $fich >> tempengine.txt
+	grep ^\.\.EngineType $fich >> tempengine.txt
 #amount(pour les solidfuels)
 	grep ^\.\.amount $fich >> tempengine.txt
 #isp
