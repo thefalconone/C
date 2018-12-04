@@ -1,4 +1,4 @@
-#include "main.h"
+#include "secondary.h"
 
 void strcpynb(char* coller, char* copier, int nb){
 	int i=nb;

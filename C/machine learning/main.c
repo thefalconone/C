@@ -1,17 +1,12 @@
 #include "main.h"
 
 int main(){
-		engine* listeng=lireengtxt();
-		fueltank* listft=lirefttxt();
+	engine* listeng=lireengtxt();
+	fueltank* listft=lirefttxt();
 
-		time_t t;
-		srand((unsigned) time(&t));
-
-		//il y a 41 fuel tanks et 24 engines
-
-		stage* best=genetic(listft,listeng,1,1,1);
-		afficherfusee(best);
-		printf("%.0fΔv	%d$	minTWR:%.3f", deltav(best), costfusee(best), mintwr(best));
+	if(listeng!=NULL && listft!=NULL){//si les fichiers ont bien étés ouverts
+		genetic(listft,listeng,4,0.5,2);
+	}
 	return 0;
 }
 
@@ -49,6 +44,11 @@ int main(){
 				}
 			}
 		}
+
+
+		stage* best=initialisefusee();
+		afficherfusee(best);
+		printf("%.0fΔv	%d$	minTWR:%.3f", deltav(best), costfusee(best), mintwr(best));
 */
 
 // 1 gene / part / etage / ftmax et engine

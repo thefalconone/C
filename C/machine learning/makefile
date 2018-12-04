@@ -4,13 +4,13 @@ all: main.o fichier.o fusee.o genetic.o
 main.o: main.c main.h
 	gcc -c main.c -o main.o -Wall
 
-fichier.o: fichier.c main.h
+fichier.o: fichier.c secondary.h
 	gcc -c fichier.c -o fichier.o -Wall
 
-fusee.o: fusee.c main.h
+fusee.o: fusee.c secondary.h
 	gcc -c fusee.c -o fusee.o -Wall
 
-genetic.o:  genetic.c  genetic.h
+genetic.o:  genetic.c  secondary.h
 	gcc -c genetic.c -o genetic.o -Wall
 
 clean:

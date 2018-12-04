@@ -1,4 +1,4 @@
-#include "main.h"
+#include "secondary.h"
 
 stage* initialisefusee(){
 	stage* s=malloc(sizeof(*s));
@@ -116,7 +116,7 @@ void afficherstage(stage* s){
 
 void afficherfusee(stage* s){
 	if(s->under!=NULL){//au cas ou la fusee soit vide
-		printf("fusee:\n\n");
+		printf("\nfusee:\n\n");
 		s=s->under;
 		afficherstage(s);
 		while(s->under!=NULL){
@@ -128,6 +128,7 @@ void afficherfusee(stage* s){
 
 void addstage(stage* s, int nbft, fueltank* ft, engine e){
 	float totalmass=0;
+	totalmass += s->totalmass;
 	while(s->under!=NULL){
 		totalmass += s->totalmass;
 		s=s->under;
@@ -141,6 +142,7 @@ void addstage(stage* s, int nbft, fueltank* ft, engine e){
 	under->e=e;
 	under->totalmass=s->totalmass+stagetotalmass(under);
 	under->drymass=s->totalmass+stagedrymass(under);
+	s->under=malloc(sizeof(stage*));
 	s->under=under;
 }
 
@@ -167,7 +169,7 @@ int costfusee(stage* s){
 }
 
 float mintwr(stage* s){
-	float rep=3;//tout ce qu'est au dessus de 5 n'est pas necessaire
+	float rep=5;//tout ce qu'est au dessus de 5 n'est pas necessaire
 	while(s->under!=NULL){
 		s=s->under;
 		float stagetwr= s->e.thrust / (s->totalmass*9.81);
@@ -175,5 +177,15 @@ float mintwr(stage* s){
 			rep=stagetwr;
 		}
 	}
+
+	if(rep==5){//au dela de 5 on perds
+		rep=0;
+	}
 	return rep;
+}
+
+float scorefusee(stage* s, float moddeltav, float modcost, float modtwr){
+	//printf("scorefusee	%.0fΔv	%d$	minTWR:%.3f\n", deltav(s), costfusee(s), mintwr(s));
+	//printf("apres modifier	%.0fΔv	%.0f$	minTWR:%.0f\n", moddeltav*deltav(s), -modcost*costfusee(s), 1000*modtwr*mintwr(s));
+	return (moddeltav*deltav(s) - modcost*costfusee(s) + 1000*modtwr*mintwr(s));
 }
