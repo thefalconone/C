@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>//pour le ln et le pow
+#include <time.h>
 
 typedef enum typecarb{ liquid, solid, monoprop, nuclear }typecarb;
 

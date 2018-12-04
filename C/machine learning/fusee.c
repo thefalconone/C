@@ -1,5 +1,4 @@
 #include "main.h"
-#include <math.h>//pour le ln
 
 stage* initialisefusee(){
 	stage* s=malloc(sizeof(*s));
