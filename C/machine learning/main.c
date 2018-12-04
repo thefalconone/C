@@ -5,7 +5,7 @@ int main(){
 	fueltank* listft=lirefttxt();
 
 	if(listeng!=NULL && listft!=NULL){//si les fichiers ont bien étés ouverts
-		genetic(listft,listeng,4,0.5,2);
+		genetic(listft,listeng);
 	}
 	return 0;
 }

@@ -1,11 +1,45 @@
 #include "secondary.h"
 #include <time.h>
+
 #define nbmaxft 5
 #define nbmaxstages 5
+//nbpop tjrs pair (à cause du cross-over)
 #define nbpop 100
 
-//il y a 41 fuel tanks et 24 engines
+#define moddeltav 4
+#define modcost 0.5
+#define modtwr 2
 
+void quicksort(int* number,int first,int last){
+	int i, j, pivot, temp;
+
+	if(first<last){
+		pivot=first;
+		i=first;
+		j=last;
+
+		while(i<j){
+			while(number[i]<=number[pivot]&&i<last)
+			i++;
+			while(number[j]>number[pivot])
+			j--;
+			if(i<j){
+				temp=number[i];
+				number[i]=number[j];
+				number[j]=temp;
+			}
+		}
+
+		temp=number[pivot];
+		number[pivot]=number[j];
+		number[j]=temp;
+		quicksort(number,first,j-1);
+		quicksort(number,j+1,last);
+
+	}
+}
+
+//il y a 41 fuel tanks et 24 engines
 genestage* initialisegenestage(){
 
 	genestage* s=malloc(sizeof(*s));
@@ -37,6 +71,22 @@ gene* initialisegene(){
 	return g;
 }
 
+stage** initialisepopfusee(){
+	stage** pop=malloc(sizeof(*pop)*nbpop);
+	for(int i=0; i<nbpop; i++){
+		pop[i]=initialisefusee();
+	}
+	return pop;
+}
+
+gene** initialisepopgenes(){
+	gene** genespop=malloc(sizeof(*genespop)*nbpop);
+	for(int i=0; i<nbpop; i++){
+		genespop[i]=initialisegene();
+	}
+	return genespop;
+}
+
 void construire(fueltank* listft, engine* listeng, stage** pop, gene** genespop){
 	for(int i=0; i<nbpop; i++){//i=individu
 		pop[i]=initialisefusee();
@@ -58,35 +108,36 @@ void construire(fueltank* listft, engine* listeng, stage** pop, gene** genespop)
 	}
 }
 
-int evaluer(stage** pop, float moddeltav, float modcost, float modtwr){
-	float bestscore=0, scoremoy=0;
-	int indicebest=0;
-
-	for(int i=0; i<nbpop; i++){
-		float score=scorefusee(pop[i], moddeltav, modcost, modtwr);
-		scoremoy+=score;
-		if(score>bestscore){
-			bestscore=score;
-			indicebest=i;
-		}
+int* best5percent(int* scores){
+	int* best5=malloc(sizeof(*best5));
+	for(int i=0; i<5; i++){
+		best5[i]=scores[nbpop-i-1];
 	}
-	scoremoy/=nbpop;
-	afficherfusee(pop[indicebest]);
-	printf("La fusée %d gagne avec un score de %.0f\n%.0fΔv	%d$	minTWR:%.3f\nLa moyenne est de %.0f", indicebest, bestscore, deltav(pop[indicebest]), costfusee(pop[indicebest]), mintwr(pop[indicebest]), scoremoy);
+
 	return indicebest;
 }
 
-void reproduire(gene** genespop, int indicebest){
+int* worst5percent(int* scores){
+
+}
+
+void reproduire(gene** genespop, stage** pop){
+
+	//SELECTION
+	float* scores=malloc(sizeof(*score)*nbpop);
+	for(int i=0; i<nbpop; i++){
+		float scores[i]=scorefusee(pop[i], moddeltav, modcost, modtwr);
+	}
+	quicksort(scores,0,nbpop-1);
+
+	for(int i=0; i<nbpop; i++){
+		printf("%d\n",scores[i]);
+	}
+	int* indicebest=best5percent(scores);
+
+	//MUTATION
 	for(int i=0; i<nbpop; i++){
 		for(int j=0; j<nbmaxstages; j++){
-
-			//SELECTION
-			//le meilleur a 1 chance sur 3 de partager son gène de stage
-			if(!(rand()%3)){
-				genespop[i]->s[j]=genespop[indicebest]->s[j];
-			}
-
-			//MUTATION
 			//il y a 1% de chances qu'une mutation random remplace un ft par un autre
 			//et 0.25% de chance qu'une mutation random remplace un ft par rien
 			if(!(rand()%11)){
@@ -108,36 +159,50 @@ void reproduire(gene** genespop, int indicebest){
 	}
 
 	//CROSS-OVER
-	int appareiles[nbpop/2]={-1};
-	//la première moitié de la population va être appareillée avec la seconde moitié en random
+	int appareilles[nbpop/2];
 	for(int i=0; i<nbpop/2; i++){
-		
+		appareilles[i]=-1;
+	}
+	//on crée un tableau qui va associer les nbpop/2 premiers (random) avec les nbpop/2 (restants dans l'ordre)
+	for(int i=nbpop/2; i>0; i--){
+		//je me déplace un nb random (entre 0 et iterations-1)de fois dans le tableau
+		int deplac=rand()%i, decal=0;
+		for(int j=0; j<=deplac; j++){
+			if(appareilles[j+decal]!=-1){
+				decal++;
+			}
+		}
+		while(appareilles[deplac+decal]!=-1){
+			decal++;
+		}
+		appareilles[deplac+decal]=i-1;
+	}
+
+
+	for(int i=0; i<nbpop/2; i++){
+		for(int j=0; j<nbmaxstages/2; j++){
+			genespop[i]->s[j]=genespop[appareilles[i]]->s[j];
+		}
+	}
+	for(int i=0; i<nbpop/2; i++){
+		for(int j=nbmaxstages/2; j<nbmaxstages; j++){
+			genespop[appareilles[i]]->s[j]=genespop[i]->s[j];
+		}
 	}
 }
 
-void genetic(fueltank* listft, engine* listeng, float moddeltav, float modcost, float modtwr){
+void genetic(fueltank* listft, engine* listeng){
 
 	time_t t;
 	srand((unsigned) time(&t));
 
-	//création d'une population de nbpop fusees
-	stage** pop=malloc(sizeof(*pop)*nbpop);
-	for(int i=0; i<nbpop; i++){
-		pop[i]=initialisefusee();
-	}
+	stage** pop=initialisepopfusee();
+	gene** genespop=initialisepopgenes();
 
-	//initialisation des genes
-	gene** genespop=malloc(sizeof(*genespop)*nbpop);
-	for(int i=0; i<nbpop; i++){
-		genespop[i]=initialisegene();
-	}
-
-
-	char usercontinue=121;
-	//n = 110
-	//y= 121
-	while(usercontinue-110){//pour avancer d'une génération à la fois
-		system("clear");
+	int usercontinue=1;//nb de genrations à calculer avant d'afficher le resultat
+	while(usercontinue!=0){//pour avancer d'une génération à la fois
+		usercontinue--;
+		//system("clear");
 
 		//construire la nouvelle génération et reset la precedente
 		construire(listft, listeng, pop, genespop);
@@ -145,11 +210,23 @@ void genetic(fueltank* listft, engine* listeng, float moddeltav, float modcost, 
 		//evaluer la génération
 		//la faire reproduire
 		//le meilleur partage ses gènes par bloc de stage
-		reproduire(genespop, evaluer(pop, moddeltav, modcost, modtwr));
+		reproduire(genespop,pop);
 
 		//à implementer: un compteur (nb de generations à skip) avec un print par génération pour montrer l'avancement
-		printf("Voulez vous continuer? (y=yes,n=no)\n");
-		fpurge(stdin);
-		scanf("%c",&usercontinue);
+		if(!usercontinue){//tant qu'il est pas égal à 0
+			printf("Continuer combien de fois?\n");
+			fpurge(stdin);
+			scanf("%d",&usercontinue);
+		}
 	}
 }
+
+/*
+
+	if(!usercontinue){
+		afficherfusee(pop[indicebest]);
+		printf("La fusée %d gagne avec un score de %.0f\n%.0fΔv	%d$	minTWR:%.3f\nLa moyenne est de %.0f\n", indicebest, bestscore, deltav(pop[indicebest]), costfusee(pop[indicebest]), mintwr(pop[indicebest]), scoremoy);
+	}
+	printf("%.0f\n",scoremoy);
+
+*/
