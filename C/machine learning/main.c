@@ -9,7 +9,7 @@ int main(){
 
 		//il y a 41 fuel tanks et 24 engines
 
-		stage* best=initialisefusee();
+		stage* best=genetic(listft,listeng,1,1,1);
 		afficherfusee(best);
 		printf("%.0fΔv	%d$	minTWR:%.3f", deltav(best), costfusee(best), mintwr(best));
 	return 0;

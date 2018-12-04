@@ -41,3 +41,5 @@ void affichereng(engine e);
 void afficherft(fueltank ft);
 int costfusee(stage* s);
 float mintwr(stage* s);
+
+stage* genetic(fueltank* listft, engine* listeng, float moddeltav, float modcost, float modtwr);
