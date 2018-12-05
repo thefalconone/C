@@ -109,7 +109,7 @@ void construire(fueltank* listft, engine* listeng, stage** pop, gene** genespop)
 	}
 }
 
-void affichage(stage** pop, float** scores){
+void affichage(stage** pop, float** scores, int usercontinue){
 	//calcul de la moyenne
 	float scoremoy;
 	for(int i=0; i<nbpop; i++){
@@ -124,7 +124,7 @@ void affichage(stage** pop, float** scores){
 	printf("meilleur: %.0f		moyenne: %.0f\n",scores[nbpop-1][1], scoremoy);
 }
 
-scores** remplirscores(){
+float** remplirscores(stage** pop){
 	float** scores=malloc(sizeof(*scores)*nbpop);
 	for(int i=0; i<nbpop; i++){
 		scores[i]=malloc(sizeof(*scores[i])*2);//pour indice et score correspondant
@@ -134,26 +134,57 @@ scores** remplirscores(){
 	return scores;
 }
 
+int* appareillage(){
+	int* appareilles=malloc(sizeof(*appareilles)*nbpop/4);
+	for(int i=0; i<nbpop/4; i++){
+		appareilles[i]=-1;
+	}
+	//on crée un tableau qui va associer les nbpop/4 premiers (random) avec les nbpop/4 (restants dans l'ordre) car on a tué la moitié
+	for(int i=nbpop/4; i>0; i--){
+		//je me déplace un nb random (entre 0 et iterations-1)de fois dans le tableau
+		int deplac=rand()%i, decal=0;
+		for(int j=0; j<=deplac; j++){
+			if(appareilles[j+decal]!=-1){
+				decal++;
+			}
+		}
+		while(appareilles[deplac+decal]!=-1){
+			decal++;
+		}
+		appareilles[deplac+decal]=i-1;
+	}
+	return appareilles;
+}
+
 void reproduire(gene** genespop, stage** pop, int usercontinue){
 
 	//SELECTION
-	float** scores=remplirscores();
+	float** scores=remplirscores(pop);
 	quicksort(scores,0,nbpop-1);
-	affichage(pop, scores);
+	affichage(pop, scores, usercontinue);
 
 	//les pires 5 sont remplacés par les meilleurs 5
 	int* vivants=malloc(sizeof(*vivants)*nbpop/2);
-	int nbvivant=0;
-	while(nbvivants<50){
-		int indice=rand()%nbpop;//0=nul et 99=meilleur
-		if( rand()%(indice+1) ){
-
+	int nbtues=0;
+	while(nbtues<50){
+		int indice=rand()%nbpop;//entre 0 et 99
+		char existe=0;
+		for(int i=0; i<nbtues; i++){
+			if(vivants[i]==indice){ existe=1; }
+		}
+		if(!existe){
+			//0=nul=0% chance de vivre
+			//99=meilleur=99% chance de vivre
+			if(rand()%nbpop < indice){//plus l'indice est grand, plus c'est dur de le tuer
+				vivants[nbtues]=indice;
+				nbtues++;
+			}
 		}
 	}
 
 	//MUTATION
 	for(int i=0; i<5; i++){//seul 5 fusées mutent
-		int indice=rand()%nbpop;
+		int indice=vivants[rand()%(nbpop/2)];
 		for(int j=0; j<nbmaxstages; j++){
 
 			for(int k=0; k<nbmaxft; k++){
@@ -173,36 +204,23 @@ void reproduire(gene** genespop, stage** pop, int usercontinue){
 	}
 
 	//CROSS-OVER
-	int appareilles[nbpop/2];
-	for(int i=0; i<nbpop/2; i++){
-		appareilles[i]=-1;
-	}
-	//on crée un tableau qui va associer les nbpop/2 premiers (random) avec les nbpop/2 (restants dans l'ordre)
-	for(int i=nbpop/2; i>0; i--){
-		//je me déplace un nb random (entre 0 et iterations-1)de fois dans le tableau
-		int deplac=rand()%i, decal=0;
-		for(int j=0; j<=deplac; j++){
-			if(appareilles[j+decal]!=-1){
-				decal++;
+	//creation d'un tableau de nbpop/2 randoms
+	int* appareilles=appareillage();
+	gene** newgenespop=initialisepopgenes();
+
+	for(int e=0; e<4; e++){
+		for(int i=0; i<nbpop/4; i++){
+			int coupe=rand()%nbmaxstages;//on sépare le génome en 2
+			//première partie
+			for(int j=0; j<coupe; j++){
+				newgenespop[i+e]->s[j]=genespop[i]->s[j];
+			}
+			for(int j=coupe; j<nbmaxstages; j++){
+				newgenespop[i+e]->s[j]=genespop[appareilles[i]]->s[j];
 			}
 		}
-		while(appareilles[deplac+decal]!=-1){
-			decal++;
-		}
-		appareilles[deplac+decal]=i-1;
 	}
-
-
-	for(int i=0; i<nbpop/2; i++){
-		for(int j=0; j<nbmaxstages/2; j++){
-			genespop[i]->s[j]=genespop[appareilles[i]]->s[j];
-		}
-	}
-	for(int i=0; i<nbpop/2; i++){
-		for(int j=nbmaxstages/2; j<nbmaxstages; j++){
-			genespop[appareilles[i]]->s[j]=genespop[i]->s[j];
-		}
-	}
+	genespop=newgenespop;
 }
 
 void genetic(fueltank* listft, engine* listeng){
@@ -241,22 +259,5 @@ void genetic(fueltank* listft, engine* listeng){
 		printf("La fusée %d gagne avec un score de %.0f\n%.0fΔv	%d$	minTWR:%.3f\nLa moyenne est de %.0f\n", indicebest, bestscore, deltav(pop[indicebest]), costfusee(pop[indicebest]), mintwr(pop[indicebest]), scoremoy);
 	}
 	printf("%.0f\n",scoremoy);
-
-*/
-
-/*MUTATION
-
-			for(int k=0; k<nbmaxft; k++){
-				if(!(rand()%11)){
-					genespop[i]->s[j]->ft[k]=rand()%40;
-				}
-				else if((!rand()%41)){
-					genespop[i]->s[j]->ft[k]=-1;
-				}
-			}
-			
-			if(!(rand()%11)){
-				genespop[i]->s[j]->e=rand()%23;
-			}
 
 */
