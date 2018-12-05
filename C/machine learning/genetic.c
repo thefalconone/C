@@ -10,8 +10,9 @@
 #define modcost 0.5
 #define modtwr 2
 
-void quicksort(int* number,int first,int last){
-	int i, j, pivot, temp;
+void quicksort(float** number,int first,int last){
+	int i, j, pivot;
+	float* temp;
 
 	if(first<last){
 		pivot=first;
@@ -19,9 +20,9 @@ void quicksort(int* number,int first,int last){
 		j=last;
 
 		while(i<j){
-			while(number[i]<=number[pivot]&&i<last)
+			while(number[i][1]<=number[pivot][1] && i<last)
 			i++;
-			while(number[j]>number[pivot])
+			while(number[j][1]>number[pivot][1])
 			j--;
 			if(i<j){
 				temp=number[i];
@@ -108,51 +109,64 @@ void construire(fueltank* listft, engine* listeng, stage** pop, gene** genespop)
 	}
 }
 
-int* best5percent(int* scores){
-	int* best5=malloc(sizeof(*best5));
-	for(int i=0; i<5; i++){
-		best5[i]=scores[nbpop-i-1];
+void affichage(stage** pop, float** scores){
+	//calcul de la moyenne
+	float scoremoy;
+	for(int i=0; i<nbpop; i++){
+		scoremoy+=scores[i][1];
 	}
+	scoremoy/=nbpop;
 
-	return indicebest;
+	if(!usercontinue){
+		afficherfusee(pop[nbpop-1]);
+		printf("La fusée gagne avec un score de %.0f\n%.0fΔv	%d$	minTWR:%.3f\n", scores[nbpop-1][1], deltav(pop[nbpop-1]), costfusee(pop[nbpop-1]), mintwr(pop[nbpop-1]));
+	}
+	printf("meilleur: %.0f		moyenne: %.0f\n",scores[nbpop-1][1], scoremoy);
 }
 
-int* worst5percent(int* scores){
-
+scores** remplirscores(){
+	float** scores=malloc(sizeof(*scores)*nbpop);
+	for(int i=0; i<nbpop; i++){
+		scores[i]=malloc(sizeof(*scores[i])*2);//pour indice et score correspondant
+		scores[i][0]=i;
+		scores[i][1]=scorefusee(pop[i], moddeltav, modcost, modtwr);
+	}
+	return scores;
 }
 
-void reproduire(gene** genespop, stage** pop){
+void reproduire(gene** genespop, stage** pop, int usercontinue){
 
 	//SELECTION
-	float* scores=malloc(sizeof(*score)*nbpop);
-	for(int i=0; i<nbpop; i++){
-		float scores[i]=scorefusee(pop[i], moddeltav, modcost, modtwr);
-	}
+	float** scores=remplirscores();
 	quicksort(scores,0,nbpop-1);
+	affichage(pop, scores);
 
-	for(int i=0; i<nbpop; i++){
-		printf("%d\n",scores[i]);
+	//les pires 5 sont remplacés par les meilleurs 5
+	int* vivants=malloc(sizeof(*vivants)*nbpop/2);
+	int nbvivant=0;
+	while(nbvivants<50){
+		int indice=rand()%nbpop;//0=nul et 99=meilleur
+		if( rand()%(indice+1) ){
+
+		}
 	}
-	int* indicebest=best5percent(scores);
 
 	//MUTATION
-	for(int i=0; i<nbpop; i++){
+	for(int i=0; i<5; i++){//seul 5 fusées mutent
+		int indice=rand()%nbpop;
 		for(int j=0; j<nbmaxstages; j++){
-			//il y a 1% de chances qu'une mutation random remplace un ft par un autre
-			//et 0.25% de chance qu'une mutation random remplace un ft par rien
-			if(!(rand()%11)){
-				for(int k=0; k<nbmaxft; k++){
-					if(!(rand()%11)){
-						genespop[i]->s[j]->ft[k]=rand()%40;
-					}
-					else if((!rand()%41)){
-						genespop[i]->s[j]->ft[k]=-1;
-					}
-				}
-				//1% de chance de mutation random d'un engine
+
+			for(int k=0; k<nbmaxft; k++){
 				if(!(rand()%11)){
-					genespop[i]->s[j]->e=rand()%23;
+					genespop[indice]->s[j]->ft[k]=rand()%40;
 				}
+				else if((!rand()%41)){
+					genespop[indice]->s[j]->ft[k]=-1;
+				}
+			}
+			
+			if(!(rand()%11)){
+				genespop[indice]->s[j]->e=rand()%23;
 			}
 
 		}
@@ -202,7 +216,6 @@ void genetic(fueltank* listft, engine* listeng){
 	int usercontinue=1;//nb de genrations à calculer avant d'afficher le resultat
 	while(usercontinue!=0){//pour avancer d'une génération à la fois
 		usercontinue--;
-		//system("clear");
 
 		//construire la nouvelle génération et reset la precedente
 		construire(listft, listeng, pop, genespop);
@@ -210,13 +223,13 @@ void genetic(fueltank* listft, engine* listeng){
 		//evaluer la génération
 		//la faire reproduire
 		//le meilleur partage ses gènes par bloc de stage
-		reproduire(genespop,pop);
+		reproduire(genespop, pop, usercontinue);
 
-		//à implementer: un compteur (nb de generations à skip) avec un print par génération pour montrer l'avancement
 		if(!usercontinue){//tant qu'il est pas égal à 0
 			printf("Continuer combien de fois?\n");
 			fpurge(stdin);
 			scanf("%d",&usercontinue);
+			system("clear");
 		}
 	}
 }
@@ -228,5 +241,22 @@ void genetic(fueltank* listft, engine* listeng){
 		printf("La fusée %d gagne avec un score de %.0f\n%.0fΔv	%d$	minTWR:%.3f\nLa moyenne est de %.0f\n", indicebest, bestscore, deltav(pop[indicebest]), costfusee(pop[indicebest]), mintwr(pop[indicebest]), scoremoy);
 	}
 	printf("%.0f\n",scoremoy);
+
+*/
+
+/*MUTATION
+
+			for(int k=0; k<nbmaxft; k++){
+				if(!(rand()%11)){
+					genespop[i]->s[j]->ft[k]=rand()%40;
+				}
+				else if((!rand()%41)){
+					genespop[i]->s[j]->ft[k]=-1;
+				}
+			}
+			
+			if(!(rand()%11)){
+				genespop[i]->s[j]->e=rand()%23;
+			}
 
 */
