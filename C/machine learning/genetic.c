@@ -134,6 +134,7 @@ float** remplirscores(stage** pop){
 	return scores;
 }
 
+//return un tableau de nbpop/4 entiers compris entre 0 et nbpop/4-1 randomisés
 int* appareillage(){
 	int* appareilles=malloc(sizeof(*appareilles)*nbpop/4);
 	for(int i=0; i<nbpop/4; i++){
@@ -151,22 +152,15 @@ int* appareillage(){
 		while(appareilles[deplac+decal]!=-1){
 			decal++;
 		}
-		appareilles[deplac+decal]=i-1;
+		appareilles[deplac+decal]=i-1+nbpop/4;
 	}
 	return appareilles;
 }
 
-void reproduire(gene** genespop, stage** pop, int usercontinue){
-
-	//SELECTION
-	float** scores=remplirscores(pop);
-	quicksort(scores,0,nbpop-1);
-	affichage(pop, scores, usercontinue);
-
-	//les pires 5 sont remplacés par les meilleurs 5
-	int* vivants=malloc(sizeof(*vivants)*nbpop/2);
+int* tue(int nbtokill){
+	int* vivants=malloc( sizeof(*vivants)*(nbpop-nbtokill) );
 	int nbtues=0;
-	while(nbtues<50){
+	while(nbtues<nbtokill){
 		int indice=rand()%nbpop;//entre 0 et 99
 		char existe=0;
 		for(int i=0; i<nbtues; i++){
@@ -181,6 +175,19 @@ void reproduire(gene** genespop, stage** pop, int usercontinue){
 			}
 		}
 	}
+	return vivants;
+}
+
+void reproduire(gene** genespop, stage** pop, int usercontinue){
+
+	//SELECTION
+	float** scores=remplirscores(pop);
+	quicksort(scores,0,nbpop-1);
+	affichage(pop, scores, usercontinue);
+
+	//on tue nbpop/2 de la population
+	int* vivants=tue(nbpop/2);
+	//dorenavant in travaille sur les fusées d'indice vivants[xx];
 
 	//MUTATION
 	for(int i=0; i<5; i++){//seul 5 fusées mutent
@@ -195,7 +202,7 @@ void reproduire(gene** genespop, stage** pop, int usercontinue){
 					genespop[indice]->s[j]->ft[k]=-1;
 				}
 			}
-			
+
 			if(!(rand()%11)){
 				genespop[indice]->s[j]->e=rand()%23;
 			}
@@ -204,20 +211,23 @@ void reproduire(gene** genespop, stage** pop, int usercontinue){
 	}
 
 	//CROSS-OVER
-	//creation d'un tableau de nbpop/2 randoms
-	int* appareilles=appareillage();
 	gene** newgenespop=initialisepopgenes();
 
-	for(int e=0; e<4; e++){
+	for(int e=0; e<4; e++){//nbpop/4 papas et nbpop/4 mamans donc les couples font 4 enfants
+		//creation d'un tableau de nbpop/4 randoms
+		int* appareilles=appareillage();
 		for(int i=0; i<nbpop/4; i++){
+
 			int coupe=rand()%nbmaxstages;//on sépare le génome en 2
 			//première partie
 			for(int j=0; j<coupe; j++){
-				newgenespop[i+e*nbpop/4]->s[j]=genespop[i]->s[j];
+				newgenespop[i+e*nbpop/4]->s[j]=genespop[vivants[i]]->s[j];
 			}
+			//printf("père vivants[i]=%d			enfant i+e*nbpop/4=%d\n", vivants[i], i+e*nbpop/4);
 			for(int j=coupe; j<nbmaxstages; j++){
-				newgenespop[i+e*nbpop/4]->s[j]=genespop[appareilles[i]]->s[j];
+				newgenespop[i+e*nbpop/4]->s[j]=genespop[vivants[appareilles[i]]]->s[j];
 			}
+			//printf("mère vivants[appareilles[i]+nbpop/4]=%d	enfant i+e*nbpop/4=%d\n", vivants[appareilles[i]+nbpop/4], i+e*nbpop/4);
 		}
 	}
 	genespop=newgenespop;
