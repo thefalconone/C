@@ -213,10 +213,10 @@ void reproduire(gene** genespop, stage** pop, int usercontinue){
 			int coupe=rand()%nbmaxstages;//on sépare le génome en 2
 			//première partie
 			for(int j=0; j<coupe; j++){
-				newgenespop[i+e]->s[j]=genespop[i]->s[j];
+				newgenespop[i+e*nbpop/4]->s[j]=genespop[i]->s[j];
 			}
 			for(int j=coupe; j<nbmaxstages; j++){
-				newgenespop[i+e]->s[j]=genespop[appareilles[i]]->s[j];
+				newgenespop[i+e*nbpop/4]->s[j]=genespop[appareilles[i]]->s[j];
 			}
 		}
 	}
