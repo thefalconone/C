@@ -41,6 +41,7 @@ void quicksort(float** number,int first,int last){
 }
 
 //il y a 41 fuel tanks et 24 engines
+//rempli le génome de gènes random
 genestage* initialisegenestage(){
 
 	genestage* s=malloc(sizeof(*s));
@@ -61,7 +62,7 @@ genestage* initialisegenestage(){
 }
 
 gene* initialisegene(){
-	gene* g=malloc(sizeof(*g));//malloc car*
+	gene* g=malloc(sizeof(*g));
 
 	g->s=malloc(sizeof(&g->s)*nbmaxstages);
 
@@ -72,6 +73,7 @@ gene* initialisegene(){
 	return g;
 }
 
+//mets des satellites dans toutes les fusées mais rien d'autre
 stage** initialisepopfusee(){
 	stage** pop=malloc(sizeof(*pop)*nbpop);
 	for(int i=0; i<nbpop; i++){
@@ -88,6 +90,7 @@ gene** initialisepopgenes(){
 	return genespop;
 }
 
+//rempli la pop grâce aux gènes
 void construire(fueltank* listft, engine* listeng, stage** pop, gene** genespop){
 	for(int i=0; i<nbpop; i++){//i=individu
 		pop[i]=initialisefusee();
@@ -98,7 +101,7 @@ void construire(fueltank* listft, engine* listeng, stage** pop, gene** genespop)
 			int nbftgene=0;
 
 			for(int k=0; k<nbmaxft; k++){//k=un fueltank
-				//si il y a un fuel tank et pas rien
+				//si il y a un fuel tank
 				if(genespop[i]->s[j]->ft[k]!=-1){
 					geneft[nbftgene] = listft[ genespop[i]->s[j]->ft[k] ] ;
 					nbftgene++;
@@ -124,24 +127,37 @@ void affichage(stage** pop, float** scores, int usercontinue){
 	printf("meilleur: %.0f		moyenne: %.0f\n",scores[nbpop-1][1], scoremoy);
 }
 
-float** remplirscores(stage** pop){
+//renvoie un tableau de scores à coté de leur indices
+/*
+i=0     scores[i][0]=22 scores[i][1]=-37115
+i=1     scores[i][0]=42 scores[i][1]=-37049
+i=2     scores[i][0]=54 scores[i][1]=-36625
+i=3     scores[i][0]=32 scores[i][1]=-28772
+...		...
+i=96    scores[i][0]=18 scores[i][1]=25985
+i=97    scores[i][0]=70 scores[i][1]=26223
+i=98    scores[i][0]=82 scores[i][1]=28323
+i=99    scores[i][0]=16 scores[i][1]=36693
+*/
+float** remplirscorestries(stage** pop){
 	float** scores=malloc(sizeof(*scores)*nbpop);
 	for(int i=0; i<nbpop; i++){
 		scores[i]=malloc(sizeof(*scores[i])*2);//pour indice et score correspondant
 		scores[i][0]=i;
 		scores[i][1]=scorefusee(pop[i], moddeltav, modcost, modtwr);
 	}
+	quicksort(scores,0,nbpop-1);
 	return scores;
 }
 
-//return un tableau de nbpop/4 entiers compris entre 0 et nbpop/4-1 randomisés
-int* appareillage(){
-	int* appareilles=malloc(sizeof(*appareilles)*nbpop/4);
-	for(int i=0; i<nbpop/4; i++){
+//return un tableau de nb entiers compris entre 0 et nb-1 randomisés
+int* appareillage(int nb){
+	int* appareilles=malloc(sizeof(*appareilles)*nb);
+	for(int i=0; i<nb; i++){
 		appareilles[i]=-1;
 	}
-	//on crée un tableau qui va associer les nbpop/4 premiers (random) avec les nbpop/4 (restants dans l'ordre) car on a tué la moitié
-	for(int i=nbpop/4; i>0; i--){
+	//on crée un tableau qui va associer les nb (en random) avec les nb (dans l'ordre) car on a tué la moitié
+	for(int i=nb; i>0; i--){
 		//je me déplace un nb random (entre 0 et iterations-1)de fois dans le tableau
 		int deplac=rand()%i, decal=0;
 		for(int j=0; j<=deplac; j++){
@@ -152,25 +168,27 @@ int* appareillage(){
 		while(appareilles[deplac+decal]!=-1){
 			decal++;
 		}
-		appareilles[deplac+decal]=i-1+nbpop/4;
+		appareilles[deplac+decal]=i-1;
 	}
 	return appareilles;
 }
 
-int* tue(int nbtokill){
+//renvoie un tableau de nbpop-nbtokill avecles meilleurs indices qui ont une meilleure chance de survie
+int* tue(float** scores, int nbtokill){
 	int* vivants=malloc( sizeof(*vivants)*(nbpop-nbtokill) );
 	int nbtues=0;
 	while(nbtues<nbtokill){
 		int indice=rand()%nbpop;//entre 0 et 99
 		char existe=0;
+		//recherche de l'existance de l'indice dans le tableau
 		for(int i=0; i<nbtues; i++){
 			if(vivants[i]==indice){ existe=1; }
 		}
 		if(!existe){
 			//0=nul=0% chance de vivre
 			//99=meilleur=99% chance de vivre
-			if(rand()%nbpop < indice){//plus l'indice est grand, plus c'est dur de le tuer
-				vivants[nbtues]=indice;
+			if(scores[rand()%nbpop][1] < scores[indice][1]){//plus le score est grand, plus c'est dur de le tuer
+				vivants[nbtues]=scores[indice][0];
 				nbtues++;
 			}
 		}
@@ -181,12 +199,11 @@ int* tue(int nbtokill){
 void reproduire(gene** genespop, stage** pop, int usercontinue){
 
 	//SELECTION
-	float** scores=remplirscores(pop);
-	quicksort(scores,0,nbpop-1);
+	float** scores=remplirscorestries(pop);
 	affichage(pop, scores, usercontinue);
 
 	//on tue nbpop/2 de la population
-	int* vivants=tue(nbpop/2);
+	int* vivants=tue(scores, nbpop/2);
 	//dorenavant in travaille sur les fusées d'indice vivants[xx];
 
 	//MUTATION
@@ -213,22 +230,26 @@ void reproduire(gene** genespop, stage** pop, int usercontinue){
 	//CROSS-OVER
 	gene** newgenespop=initialisepopgenes();
 
-	for(int e=0; e<4; e++){//nbpop/4 papas et nbpop/4 mamans donc les couples font 4 enfants
-		//creation d'un tableau de nbpop/4 randoms
-		int* appareilles=appareillage();
-		for(int i=0; i<nbpop/4; i++){
+	for(int e=0; e<2; e++){//nbpop/2 papas et mamans en même temps donc les couples font 2 enfants
+
+		//creation d'un tableau de nbpop/2 randoms
+		int* appareilles=appareillage(nbpop/2);
+
+		for(int i=0; i<nbpop/2; i++){
 
 			int coupe=rand()%nbmaxstages;//on sépare le génome en 2
 			//première partie
 			for(int j=0; j<coupe; j++){
-				newgenespop[i+e*nbpop/4]->s[j]=genespop[vivants[i]]->s[j];
+				newgenespop[i+e*nbpop/2]->s[j]=genespop[vivants[i]]->s[j];
 			}
-			//printf("père vivants[i]=%d			enfant i+e*nbpop/4=%d\n", vivants[i], i+e*nbpop/4);
+			//printf("	père vivants[i]=%d		enfant i+e*nbpop/2=%d\n", vivants[i], i+e*nbpop/2);
+
 			for(int j=coupe; j<nbmaxstages; j++){
-				newgenespop[i+e*nbpop/4]->s[j]=genespop[vivants[appareilles[i]]]->s[j];
+				newgenespop[i+e*nbpop/2]->s[j]=genespop[ vivants[ appareilles[i] ] ]->s[j];
 			}
-			//printf("mère vivants[appareilles[i]+nbpop/4]=%d	enfant i+e*nbpop/4=%d\n", vivants[appareilles[i]+nbpop/4], i+e*nbpop/4);
+			//printf("mère vivants[appareilles[i]]=%d		enfant i+e*nbpop/2=%d\n", vivants[appareilles[i]], i+e*nbpop/2);
 		}
+
 	}
 	genespop=newgenespop;
 }
@@ -248,8 +269,7 @@ void genetic(fueltank* listft, engine* listeng){
 		//construire la nouvelle génération et reset la precedente
 		construire(listft, listeng, pop, genespop);
 
-		//evaluer la génération
-		//la faire reproduire
+		//evaluer la génération et la faire reproduire
 		//le meilleur partage ses gènes par bloc de stage
 		reproduire(genespop, pop, usercontinue);
 
@@ -257,7 +277,7 @@ void genetic(fueltank* listft, engine* listeng){
 			printf("Continuer combien de fois?\n");
 			fpurge(stdin);
 			scanf("%d",&usercontinue);
-			system("clear");
+			//system("clear");
 		}
 	}
 }
