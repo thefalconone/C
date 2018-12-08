@@ -1,5 +1,3 @@
-all: main.o fichier.o fusee.o genetic3.o
-	gcc -o main3 main.o fichier.o fusee.o genetic3.o -Wall
 
 main.o: main.c main.h
 	gcc -c main.c -o main.o -Wall
@@ -13,5 +11,3 @@ fusee.o: fusee.c secondary.h
 clean:
 	rm -f *.exe* *.o
 
-genetic3.o:  genetic3.c  secondary.h define3.h
-	gcc -c genetic3.c -o genetic3.o -Wall

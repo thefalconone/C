@@ -12,9 +12,8 @@ stage* initialisefusee(){
 
 float stagetotalmass(stage* s){
 	float rep= s->e.mass + 0.005*(s->e.lf+s->e.ox) + 0.0075*s->e.sf;
-	for(int i=0; i<s->nbft; i++){
+	for(int i=0; i<s->nbft; i++)
 		rep+= s->ft[i].drymass + 0.005*(s->ft[i].lf+s->ft[i].ox) + 0.004*s->ft[i].mo;
-	}
 	return rep;
 }
 
@@ -22,65 +21,54 @@ float stagetotalmass(stage* s){
 float stagedrymass(stage* s){
 	float rep= s->e.mass;//engine drymass
 
-	if(s->e.type==liquid){//consomme tout sauf mo
-		for(int i=0; i<s->nbft; i++){
+	//consomme tout sauf mo
+	if(s->e.type==liquid)
+		for(int i=0; i<s->nbft; i++)
 			rep+= s->ft[i].drymass + 0.004*s->ft[i].mo;
-		}
-	}
 
-	
-	else if(s->e.type==solid){//consomme rien
-		for(int i=0; i<s->nbft; i++){
+	//consomme rien
+	else if(s->e.type==solid)
+		for(int i=0; i<s->nbft; i++)
 			rep+= s->ft[i].drymass + 0.005*(s->ft[i].lf+s->ft[i].ox) + 0.004*s->ft[i].mo;
-		}
-	}
 
-	
-	else if(s->e.type==nuclear){//consomme tout sauf mo, ox
-		for(int i=0; i<s->nbft; i++){
+	//consomme tout sauf mo, ox
+	else if(s->e.type==nuclear)
+		for(int i=0; i<s->nbft; i++)
 			rep+= s->ft[i].drymass + 0.005*s->ft[i].ox + 0.004*s->ft[i].mo;
-		}
-	}
 
-	
-	else{//monoprop, consomme tout sauf monoprop
-		for(int i=0; i<s->nbft; i++){
+	//monoprop, consomme tout sauf monoprop
+	else
+		for(int i=0; i<s->nbft; i++)
 			rep+= s->ft[i].drymass + 0.005*(s->ft[i].lf+s->ft[i].ox);
-		}
-	}
 
 	return rep;
 }
 
 int stagecost(stage* s){
 	int rep= s->e.cost;
-	for(int i=0; i<s->nbft; i++){
+	for(int i=0; i<s->nbft; i++)
 		rep+= s->ft[i].cost;
-	}
 	return rep;
 }
 
 int stagelf(stage* s){
 	int rep=s->e.lf;
-	for(int i=0; i<s->nbft; i++){
+	for(int i=0; i<s->nbft; i++)
 		rep+=s->ft[i].lf;
-	}
 	return rep;
 }
 
 int stageox(stage* s){
 	int rep=s->e.ox;
-	for(int i=0; i<s->nbft; i++){
+	for(int i=0; i<s->nbft; i++)
 		rep+=s->ft[i].ox;
-	}
 	return rep;
 }
 
 int stagemo(stage* s){
 	int rep=0;
-	for(int i=0; i<s->nbft; i++){
+	for(int i=0; i<s->nbft; i++)
 		rep+=s->ft[i].mo;
-	}
 	return rep;
 }
 
@@ -91,14 +79,22 @@ int stagesf(stage* s){
 
 void affichereng(engine e){
 	printf("engine: %s\n", e.name);
-	if(e.type==liquid){ printf("Liquid");}
-	else if(e.type==solid){ printf("Solid");}
-	else if(e.type==monoprop){ printf("Monop");}
-	else{ printf("Nuclear");}
+	if(e.type==liquid)
+		printf("Liquid");
+	else if(e.type==solid)
+		printf("Solid");
+	else if(e.type==monoprop)
+		printf("Monop");
+	else
+		printf("Nuclear");
+
 	printf("	%.3ft	%dkN	%ds	%d$", e.mass, e.thrust, e.isp, e.cost);
-	if(e.lf){ printf("	%dlf", e.lf); }
-	if(e.sf){ printf("	%dsf", e.sf); }
-	if(e.ox){ printf("	%dox", e.ox); }
+	if(e.lf)
+		printf("	%dlf", e.lf); 
+	if(e.sf)
+		printf("	%dsf", e.sf); 
+	if(e.ox)
+		printf("	%dox", e.ox); 
 	printf("\n");
 }
 
@@ -107,9 +103,8 @@ void afficherft(fueltank ft){
 }
 
 void afficherstage(stage* s){
-	for(int i=0; i<s->nbft; i++){
+	for(int i=0; i<s->nbft; i++)
 		afficherft(s->ft[i]);
-	}
 	affichereng(s->e);
 	printf("\n");
 }
@@ -126,7 +121,7 @@ void afficherfusee(stage* s){
 	}
 }
 
-void addstage(stage* s, int nbft, fueltank* ft, engine e){
+void addstage(stage* s, int nbmaxstages, int* indiceft, fueltank* listft, engine e){
 	float totalmass=0;
 	totalmass += s->totalmass;
 	while(s->under!=NULL){
@@ -135,11 +130,22 @@ void addstage(stage* s, int nbft, fueltank* ft, engine e){
 	}
 	//on est au dernier stage : s->under=NULL
 	stage* under=malloc(sizeof(*under));
-	under->under=NULL;
-	under->nbft=nbft;
-	under->ft=malloc(sizeof(ft)*nbft);
-	under->ft=ft;
+
+	int vraift=0;
+	for(int i=0; i<nbmaxstages; i++)
+		if(indiceft[i]!=-1)
+			vraift++;
+	under->ft=malloc(sizeof(*under->ft)*vraift);
+	under->nbft=vraift;
+	vraift=0;
+	for (int i=0; i<nbmaxstages; i++){
+		if(indiceft[i]!=-1){
+			under->ft[vraift]=listft[indiceft[i]];
+			vraift++;
+		}
+	}
 	under->e=e;
+	under->under=NULL;
 	under->totalmass=s->totalmass+stagetotalmass(under);
 	under->drymass=s->totalmass+stagedrymass(under);
 	s->under=malloc(sizeof(stage*));
@@ -173,19 +179,16 @@ float mintwr(stage* s){
 	while(s->under!=NULL){
 		s=s->under;
 		float stagetwr= s->e.thrust / (s->totalmass*9.81);
-		if(stagetwr<rep){
+		if(stagetwr<rep)
 			rep=stagetwr;
-		}
 	}
-
-	if(rep==5){//au dela de 5 on perds
-		rep=0;
-	}
+	//au dela de 5 on perds
+	if(rep==5) rep=0;
 	return rep;
 }
 
 float scorefusee(stage* s, float moddeltav, float modcost, float modtwr){
-	//printf("scorefusee	%.0fΔv	%d$	minTWR:%.3f\n", deltav(s), costfusee(s), mintwr(s));
-	//printf("apres modifier	%.0fΔv	%.0f$	minTWR:%.0f\n", moddeltav*deltav(s), -modcost*costfusee(s), 1000*modtwr*mintwr(s));
-	return (moddeltav*deltav(s) - modcost*costfusee(s) + 1000*modtwr*mintwr(s));
+	//return moddeltav*deltav(s) - modcost*costfusee(s) + 1000*modtwr*mintwr(s);
+	return 1000*mintwr(s)*deltav(s)/costfusee(s);
+	//return pow(moddeltav*deltav(s), 2) - pow(modcost*costfusee(s), 2) - pow(1000*modtwr-1000*modtwr*mintwr(s), 2);
 }

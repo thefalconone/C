@@ -28,4 +28,4 @@ fueltank* lirefttxt();
 engine* lireengtxt();
 
 //genetic.c
-void genetic(fueltank* listft, engine* listeng);
+float genetic(fueltank* listft, engine* listeng);

@@ -7,7 +7,7 @@
 
 //fusee.c
 stage* initialisefusee();
-void addstage(stage* s, int nbft, fueltank* ft, engine e);
+void addstage(stage* s, int nbft, int* indiceft, fueltank* listft, engine e);
 void afficherfusee(stage* s);
 float scorefusee(stage* s, float moddeltav, float modcost, float modtwr);
 
