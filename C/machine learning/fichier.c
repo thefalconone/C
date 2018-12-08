@@ -9,7 +9,7 @@ void strcpynb(char* coller, char* copier, int nb){
 }
 
 engine* lire_eng(FILE* engines){
-	int taillemax=50;
+	int taillemax=100;
 	char ligne[taillemax];
 
 	fgets(ligne,taillemax,engines);
@@ -21,8 +21,8 @@ engine* lire_eng(FILE* engines){
 		//name
 		fgets(ligne, taillemax, engines);
 		listeng[i].name=malloc(sizeof(char)*strlen(ligne));
-		//elimination de "name = "
-		strcpynb(listeng[i].name,ligne,7);
+		//elimination de " "
+		strcpynb(listeng[i].name,ligne,1);
 
 		//cost
 		fgets(ligne, taillemax, engines);
@@ -95,8 +95,8 @@ fueltank* lire_ft(FILE* fueltanks){
 		//name
 		fgets(ligne, taillemax, fueltanks);
 		listft[i].name=malloc(sizeof(char)*strlen(ligne));
-		//elimination de "name = "
-		strcpynb(listft[i].name,ligne,7);
+		//elimination de " "
+		strcpynb(listft[i].name,ligne,1);
 
 		//cost
 		fgets(ligne, taillemax, fueltanks);
@@ -162,7 +162,7 @@ fueltank* lirefttxt(){
 		printf("fueltank.txt n'existe pas, création des fichiers...\n");
 		int errft=system("sh createfueltank.sh");
 		if(errft==-1){ printf("Erreur sur le script createfueltank.sh\n"); }
-		else{ printf("Succès, supprimez de la ligne 202 à 206 inclus dans fueltank.txt, puis veuillez relancer le programme\n");}
+		else{ printf("Succès, veuillez relancer le programme\n");}
 		listft=NULL;
 	}
 	fclose(fueltanks);

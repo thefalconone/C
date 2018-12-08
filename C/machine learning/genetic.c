@@ -1,3 +1,6 @@
+#include "secondary.h"
+#include <time.h>
+#include "define.h"
 
 void quicksort(float** number,int first,int last){
 	int i, j, pivot;
@@ -40,13 +43,18 @@ genestage* initialisegenestage(){
 
 		//2 chances sur 3
 		if(!(rand()%3))
-			s->ft[i]=rand()%40;
+			s->ft[i]=rand()%41;
 		else
 			s->ft[i]=-1;//no ft
 
 	}
-	s->e=rand()%23;
+	s->e=rand()%24;
 	return s;
+}
+
+void freegenestage(genestage* s){
+	free(s->ft);
+	free(s);
 }
 
 gene* initialisegene(){
@@ -59,12 +67,25 @@ gene* initialisegene(){
 	return g;
 }
 
+void freegene(gene* g){
+	for(int i=0; i<nbmaxstages; i++)
+		freegenestage(g->s[i]);
+	free(g->s);
+	free(g);
+}
+
 //mets des satellites dans toutes les fusées mais rien d'autre
 stage** initialisepopfusee(){
 	stage** pop=malloc(sizeof(*pop)*nbpop);
 	for(int i=0; i<nbpop; i++)
 		pop[i]=initialisefusee();
 	return pop;
+}
+
+void freepopfusee(stage** pop){
+	for(int i=0; i<nbpop; i++)
+		freefusee(pop[i]);
+	free(pop);
 }
 
 gene** initialisepopgenes(){
@@ -74,15 +95,17 @@ gene** initialisepopgenes(){
 	return genespop;
 }
 
+void freepopgenes(gene** genespop){
+	for(int i=0; i<nbpop; i++)
+		freegene(genespop[i]);
+	free(genespop);
+}
+
 //rempli la pop grâce aux gènes
 void construire(fueltank* listft, engine* listeng, stage** pop, gene** genespop){
-	//free(pop);
-	//pop=initialisepopfusee();
-	for(int i=0; i<nbpop; i++){
-		pop[i]=initialisefusee();
+	for(int i=0; i<nbpop; i++)
 		for(int j=0; j<nbmaxstages; j++)
-			addstage(pop[i], nbmaxstages, genespop[i]->s[j]->ft, listft, listeng[ genespop[i]->s[j]->e ] );
-	}
+			addstage(pop[i], nbmaxft, genespop[i]->s[j]->ft, listft, listeng[ genespop[i]->s[j]->e ] );
 }
 
 void affichage(stage** pop, float** scores, int usercontinue){
@@ -121,6 +144,12 @@ float** remplirscorestries(stage** pop){
 	}
 	quicksort(scores,0,nbpop-1);
 	return scores;
+}
+
+void freescores(float** scores){
+	for(int i=0; i<nbpop; i++)
+		free(scores[i]);
+	free(scores);
 }
 
 //return un tableau de nb entiers compris entre 0 et nb-1 randomisés
@@ -163,9 +192,7 @@ int* tue(float** scores, int nbtokill){
 				nbtues++;
 			}
 		}
-	}/*
-	for(int i=0; i<nbpop-nbtokill; i++)
-		vivants[i]=(int)scores[nbpop-i][0];*/
+	}
 	return vivants;
 }
 
@@ -185,15 +212,15 @@ void reproduire(gene** genespop, stage** pop, int usercontinue){
 
 	//SELECTION
 	float** scores=remplirscorestries(pop);
-	//affichage(pop, scores, usercontinue);
+	affichage(pop, scores, usercontinue);
 
 	//on tue nbpop/2 de la population
 	int* vivants=tue(scores, nbpop/2);
-	free(scores);
+	freescores(scores);
 	//dorenavant in travaille sur les fusées d'indice vivants[xx];
 
 	//MUTATION
-	for(int i=0; i<nbmut; i++){//seul 5 fusées mutent
+	for(int i=0; i<nbmut; i++){//seul nbmut fusées mutent
 		int indice=vivants[rand()%(nbpop/2)];
 		for(int j=0; j<nbmaxstages; j++){
 
@@ -232,36 +259,34 @@ void reproduire(gene** genespop, stage** pop, int usercontinue){
 	}
 	recopiegene(genespop,newgenespop);
 	free(vivants);
-	free(newgenespop);
+	freepopgenes(newgenespop);
 }
 
-float genetic(fueltank* listft, engine* listeng){
+void genetic(fueltank* listft, engine* listeng){
 
 	time_t t;
 	srand((unsigned) time(&t));
 
-	stage** pop=initialisepopfusee();
 	gene** genespop=initialisepopgenes();
 
-	int usercontinue=100;//nb de genrations à calculer avant d'afficher le resultat
+	int usercontinue=1;//nb de genrations à calculer avant d'afficher le resultat
 	while(usercontinue!=0){//pour avancer d'une génération à la fois
 		usercontinue--;
 
 		//construire la nouvelle génération et reset la precedente
+		stage** pop=initialisepopfusee();
 		construire(listft, listeng, pop, genespop);
 
 		//evaluer la génération et la faire reproduire
 		//le meilleur partage ses gènes par bloc de stage
 		reproduire(genespop, pop, usercontinue);
-		/*
+		freepopfusee(pop);
+
 		if(!usercontinue){//tant qu'il est pas égal à 0
 			printf("Continuer combien de fois?\n");
 			fpurge(stdin);
 			scanf("%d",&usercontinue);
 			//system("clear");
 		}
-		*/
 	}
-	float** scores=remplirscorestries(pop);
-	return scores[nbpop-1][1];
 }

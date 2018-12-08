@@ -1,102 +1,102 @@
 24 tempcfg.txt
-name = smallRadialEngine
+ 24-77 "Twitch" Liquid Fuel Engine
 cost = 400
 mass = 0.09
 EngineType = LiquidFuel
 key = 0 290
 maxThrust = 16
-name = liquidEngineMini
+ 48-7S "Spark" Liquid Fuel Engine
 cost = 240
 mass = 0.1
 EngineType = LiquidFuel
 key = 0 320
 maxThrust = 20
-name = toroidalAerospike
+ T-1 Toroidal Aerospike "Dart" Liquid Fuel Engine
 cost = 3850
 mass = 1.0
 EngineType = LiquidFuel
-key = 0 340 -50 -73.71224
+key = 0 340
 maxThrust = 180
-name = microEngine
+ LV-1 "Ant" Liquid Fuel Engine
 cost = 110
 mass = 0.02
 EngineType = LiquidFuel
 key = 0 315
 maxThrust = 2
-name = radialEngineMini
+ LV-1R "Spider" Liquid Fuel Engine
 cost = 120
 mass = 0.02
 EngineType = LiquidFuel
 key = 0 290
 maxThrust = 2
-name = liquidEngine3
+ LV-909 "Terrier" Liquid Fuel Engine
 cost = 390
 mass = 0.5
 EngineType = LiquidFuel
 key = 0 345
 maxThrust = 60
-name = nuclearEngine
+ LV-N "Nerv" Atomic Rocket Motor
 cost = 10000
 mass = 3
 EngineType = Nuclear
 key = 0 800
 maxThrust = 60
-name = liquidEngine
+ LV-T30 "Reliant" Liquid Fuel Engine
 cost = 1100
 mass = 1.25
 EngineType = LiquidFuel
 key = 0 310
 maxThrust = 240
-name = liquidEngine2
+ LV-T45 "Swivel" Liquid Fuel Engine
 cost = 1200
 mass = 1.5
 EngineType = LiquidFuel
 key = 0 320
 maxThrust = 215
-name = liquidEngine1-2
+ RE-M3 "Mainsail" Liquid Fuel Engine
 cost = 13000
 mass = 6
 EngineType = LiquidFuel
 key = 0 310
 maxThrust = 1500
-name = radialLiquidEngine1-2
+ Mk-55 "Thud" Liquid Fuel Engine
 cost = 820
 mass = 0.9
 EngineType = LiquidFuel
 key = 0 305
 maxThrust = 120
-name = liquidEngine2-2
+ RE-L10 "Poodle" Liquid Fuel Engine
 cost = 1300
 mass = 1.75
 EngineType = LiquidFuel
 key = 0 350
 maxThrust = 250
-name = engineLargeSkipper
+ RE-I5 "Skipper" Liquid Fuel Engine
 cost = 5300
 mass = 3
 EngineType = LiquidFuel
 key = 0 320
 maxThrust = 650
-name = SSME
+ S3 KS-25 "Vector" Liquid Fuel Engine
 cost = 18000
 mass = 4.0
 EngineType = LiquidFuel
 key = 0 315
 maxThrust = 1000
-name = MassiveBooster
+ S1 SRB-KD25k "Kickback" Solid Fuel Booster
 cost = 2700
 mass = 4.5
 EngineType = SolidBooster
 amount = 2600
 key = 0 220
 maxThrust = 670
-name = omsEngine
+ O-10 "Puff" MonoPropellant Fuel Engine
 cost = 150
 mass = 0.09
 EngineType = MonoProp
 key = 0 250
 maxThrust = 20
-name = Size2LFB
+ LFB KR-1x2 "Twin-Boar" Liquid Fuel Engine
 cost = 17000
 mass = 10.5
 EngineType = LiquidFuel
@@ -104,49 +104,47 @@ amount = 2880
 amount = 3520
 key = 0 300
 maxThrust = 2000
-name = Size3AdvancedEngine
+ Kerbodyne KR-2L+ "Rhino" Liquid Fuel Engine
 cost = 25000
 mass = 9.0
 EngineType = LiquidFuel
 key = 0 340
 maxThrust = 2000
-name = Size3EngineCluster
+ S3 KS-25x4 "Mammoth" Liquid Fuel Engine
 cost = 39000
 mass = 15
 EngineType = LiquidFuel
 key = 0 315
 maxThrust = 4000
-name = solidBooster1-1
+ BACC "Thumper" Solid Fuel Booster
 cost = 850
 mass = 1.5
 EngineType = SolidBooster
 amount = 820
 key = 0 210
 maxThrust = 300
-name = solidBooster
+ RT-10 "Hammer" Solid Fuel Booster
 cost = 400
 mass = 0.75
 EngineType = SolidBooster
 amount = 375
 key = 0 195
 maxThrust = 227
-name = solidBooster_sm
+ RT-5 "Flea" Solid Fuel Booster
 cost = 200
 mass = 0.45
 EngineType = SolidBooster
 amount = 140
 key = 0 165
 maxThrust = 192
-name = sepMotor1
+ Sepratron I
 cost = 75
 mass = 0.0125
 EngineType = SolidBooster
 amount = 8
 key = 0 154
 maxThrust = 18
-name = vernierEngine
+ Vernor Engine
 cost = 1400
 mass = 0.08
-EngineType = LiquidFuel
 key = 0 260
-maxThrust = 12

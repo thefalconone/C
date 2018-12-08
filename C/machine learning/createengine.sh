@@ -5,19 +5,20 @@ find ./Engine > tempfich.txt
 grep .cfg tempfich.txt > tempcfg.txt
 wc tempcfg.txt -l > engine.txt
 
-cat tempcfg.txt | while read fich
+for fich in `cat tempcfg.txt`
 do
-	grep ^\.name $fich >> tempengine.txt
+	grep ^\.title $fich | cut -f3 -d "=" >> tempengine.txt
 	grep ^\.cost $fich >> tempengine.txt
 	grep ^\.mass $fich >> tempengine.txt
 	grep ^\.\.EngineType $fich >> tempengine.txt
-#amount(pour les solidfuels)
+	#amount(pour les solidfuels)
 	grep ^\.\.amount $fich >> tempengine.txt
-#isp
+	#isp
 	grep ^\.\.\.key...0 $fich >> tempengine.txt
-#thrust
+	#thrust
 	grep ^\.\.maxThrust $fich >> tempengine.txt
 done
+
 
 grep -v .*Electric.* tempengine.txt > tempsanselec.txt
 sed -r "s/\t//ig" tempsanselec.txt > tempsanstab.txt

@@ -1,7 +1,7 @@
-#define nbpop 500
-#define nbmut 20
-#define nbmaxft 5
-#define nbmaxstages 5
-#define moddeltav 4
+#define nbpop 900
+#define nbmut 30
+#define nbmaxft 2
+#define nbmaxstages 1
+#define moddeltav 2
 #define modcost 1
-#define modtwr 3
+#define modtwr 1

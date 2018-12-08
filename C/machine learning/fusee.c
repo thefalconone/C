@@ -10,6 +10,17 @@ stage* initialisefusee(){
 	return s;
 }
 
+void freefusee(stage* s){
+	while(s->under!=NULL){
+		stage* under=s->under;
+		free(s->ft);
+		free(s);
+		s=under;
+	}
+	free(s->ft);
+	free(s);
+}
+
 float stagetotalmass(stage* s){
 	float rep= s->e.mass + 0.005*(s->e.lf+s->e.ox) + 0.0075*s->e.sf;
 	for(int i=0; i<s->nbft; i++)
@@ -121,7 +132,7 @@ void afficherfusee(stage* s){
 	}
 }
 
-void addstage(stage* s, int nbmaxstages, int* indiceft, fueltank* listft, engine e){
+void addstage(stage* s, int nbmaxft, int* indiceft, fueltank* listft, engine e){
 	float totalmass=0;
 	totalmass += s->totalmass;
 	while(s->under!=NULL){
@@ -132,13 +143,13 @@ void addstage(stage* s, int nbmaxstages, int* indiceft, fueltank* listft, engine
 	stage* under=malloc(sizeof(*under));
 
 	int vraift=0;
-	for(int i=0; i<nbmaxstages; i++)
+	for(int i=0; i<nbmaxft; i++)
 		if(indiceft[i]!=-1)
 			vraift++;
 	under->ft=malloc(sizeof(*under->ft)*vraift);
 	under->nbft=vraift;
 	vraift=0;
-	for (int i=0; i<nbmaxstages; i++){
+	for (int i=0; i<nbmaxft; i++){
 		if(indiceft[i]!=-1){
 			under->ft[vraift]=listft[indiceft[i]];
 			vraift++;
@@ -148,7 +159,6 @@ void addstage(stage* s, int nbmaxstages, int* indiceft, fueltank* listft, engine
 	under->under=NULL;
 	under->totalmass=s->totalmass+stagetotalmass(under);
 	under->drymass=s->totalmass+stagedrymass(under);
-	s->under=malloc(sizeof(stage*));
 	s->under=under;
 }
 
@@ -174,8 +184,8 @@ int costfusee(stage* s){
 	return rep;
 }
 
-float mintwr(stage* s){
-	float rep=5;//tout ce qu'est au dessus de 5 n'est pas necessaire
+float scoremintwr(stage* s){
+	float rep=1;//tout ce qu'est au dessus de 1 n'est pas necessaire
 	while(s->under!=NULL){
 		s=s->under;
 		float stagetwr= s->e.thrust / (s->totalmass*9.81);
@@ -183,12 +193,23 @@ float mintwr(stage* s){
 			rep=stagetwr;
 	}
 	//au dela de 5 on perds
-	if(rep==5) rep=0;
+	if(rep>5) rep=0;
+	return rep;
+}
+
+float mintwr(stage* s){
+	float rep=5;//tout ce qu'est au dessus de 1 n'est pas necessaire
+	while(s->under!=NULL){
+		s=s->under;
+		float stagetwr= s->e.thrust / (s->totalmass*9.81);
+		if(stagetwr<rep)
+			rep=stagetwr;
+	}
+	//au dela de 5 on perds
+	if(rep>5) rep=0;
 	return rep;
 }
 
 float scorefusee(stage* s, float moddeltav, float modcost, float modtwr){
-	//return moddeltav*deltav(s) - modcost*costfusee(s) + 1000*modtwr*mintwr(s);
-	return 1000*mintwr(s)*deltav(s)/costfusee(s);
-	//return pow(moddeltav*deltav(s), 2) - pow(modcost*costfusee(s), 2) - pow(1000*modtwr-1000*modtwr*mintwr(s), 2);
+	return pow(deltav(s), moddeltav) * pow(1000*scoremintwr(s), modtwr) / pow(costfusee(s), modcost);
 }
