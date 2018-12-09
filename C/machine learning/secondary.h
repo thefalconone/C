@@ -1,6 +1,5 @@
 #include "main.h"
 
-#include <stdlib.h>
 #include <string.h>
 #include <math.h>//pour le ln et le pow
 

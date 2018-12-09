@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 
 typedef enum typecarb{ liquid, solid, monoprop, nuclear }typecarb;
 
@@ -28,4 +30,4 @@ fueltank* lirefttxt();
 engine* lireengtxt();
 
 //genetic.c
-void genetic(fueltank* listft, engine* listeng);
+float genetic(fueltank* listft, engine* listeng, int nbgenerations);

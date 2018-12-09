@@ -1,5 +1,4 @@
 #include "secondary.h"
-#include <time.h>
 #include "define.h"
 
 void quicksort(float** number,int first,int last){
@@ -208,14 +207,15 @@ void recopiegene(gene** colle, gene** copie){
 			recopiestage(colle[i]->s[j],copie[i]->s[j]);
 }
 
-void reproduire(gene** genespop, stage** pop, int usercontinue){
+float reproduire(gene** genespop, stage** pop, int usercontinue){
 
 	//SELECTION
 	float** scores=remplirscorestries(pop);
+	float best=scores[nbpop-1][1];
 	affichage(pop, scores, usercontinue);
 
 	//on tue nbpop/2 de la population
-	int* vivants=tue(scores, nbpop/2);
+	int* vivants=tue(scores, (int)(nbpop*ratiokill));
 	freescores(scores);
 	//dorenavant in travaille sur les fusées d'indice vivants[xx];
 
@@ -260,16 +260,15 @@ void reproduire(gene** genespop, stage** pop, int usercontinue){
 	recopiegene(genespop,newgenespop);
 	free(vivants);
 	freepopgenes(newgenespop);
+	return best;
 }
 
-void genetic(fueltank* listft, engine* listeng){
-
-	time_t t;
-	srand((unsigned) time(&t));
+float genetic(fueltank* listft, engine* listeng, int nbgenerations){
 
 	gene** genespop=initialisepopgenes();
+	float best=0;
 
-	int usercontinue=1;//nb de genrations à calculer avant d'afficher le resultat
+	int usercontinue=nbgenerations;//nb de genrations à calculer avant d'afficher le resultat
 	while(usercontinue!=0){//pour avancer d'une génération à la fois
 		usercontinue--;
 
@@ -278,15 +277,16 @@ void genetic(fueltank* listft, engine* listeng){
 		construire(listft, listeng, pop, genespop);
 
 		//evaluer la génération et la faire reproduire
-		//le meilleur partage ses gènes par bloc de stage
-		reproduire(genespop, pop, usercontinue);
+		//les meilleurs partagent leurs gènes par bloc de stage
+		best=reproduire(genespop, pop, usercontinue);
 		freepopfusee(pop);
-
+		
 		if(!usercontinue){//tant qu'il est pas égal à 0
 			printf("Continuer combien de fois?\n");
 			fpurge(stdin);
 			scanf("%d",&usercontinue);
-			//system("clear");
 		}
+		
 	}
+	return best;
 }

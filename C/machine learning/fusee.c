@@ -3,7 +3,9 @@
 stage* initialisefusee(){
 	stage* s=malloc(sizeof(*s));
 	//2 solar panels + 1 battery bank + 1 probodobodyne OKTO2
-	s->drymass= 0.02*2 + 0.01 + 0.04;
+	//s->drymass= 0.02*2 + 0.01 + 0.04;
+	//MK3 capsule + heatshield + parachute
+	s->drymass=2.72 + 1.3 + 0.3;
 	s->totalmass=s->drymass;
 	s->ft=NULL;
 	s->under=NULL;
@@ -184,21 +186,24 @@ int costfusee(stage* s){
 	return rep;
 }
 
-float scoremintwr(stage* s){
-	float rep=1;//tout ce qu'est au dessus de 1 n'est pas necessaire
+float scoretwr(stage* s){
+	float max=8, min=1;//tout ce qu'est au dessus de 1 n'est pas necessaire
 	while(s->under!=NULL){
 		s=s->under;
 		float stagetwr= s->e.thrust / (s->totalmass*9.81);
-		if(stagetwr<rep)
-			rep=stagetwr;
+		if(stagetwr<min)
+			min=stagetwr;
+		if(stagetwr>max)
+			max=stagetwr;
 	}
 	//au dela de 5 on perds
-	if(rep>5) rep=0;
+	int rep=min;
+	if(max>8) rep=0.1;
 	return rep;
 }
 
 float mintwr(stage* s){
-	float rep=5;//tout ce qu'est au dessus de 1 n'est pas necessaire
+	float rep=8;//tout ce qu'est au dessus de 1 n'est pas necessaire
 	while(s->under!=NULL){
 		s=s->under;
 		float stagetwr= s->e.thrust / (s->totalmass*9.81);
@@ -206,10 +211,10 @@ float mintwr(stage* s){
 			rep=stagetwr;
 	}
 	//au dela de 5 on perds
-	if(rep>5) rep=0;
+	if(rep>8) rep=0;
 	return rep;
 }
 
 float scorefusee(stage* s, float moddeltav, float modcost, float modtwr){
-	return pow(deltav(s), moddeltav) * pow(1000*scoremintwr(s), modtwr) / pow(costfusee(s), modcost);
+	return pow(deltav(s), moddeltav) * pow(1000*scoretwr(s), modtwr) / pow(costfusee(s), modcost);
 }
