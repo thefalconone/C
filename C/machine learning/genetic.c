@@ -224,13 +224,11 @@ float reproduire(gene** genespop, stage** pop, int usercontinue){
 		int indice=vivants[rand()%(nbpop/2)];
 		for(int j=0; j<nbmaxstages; j++){
 
-			for(int k=0; k<nbmaxft; k++){
-				if(!(rand()%11))
-					genespop[indice]->s[j]->ft[k]=rand()%40;
+			if(!(rand()%11))
+				genespop[indice]->s[j]->ft[rand()%nbmaxft]=rand()%40;
 
-				else if((!rand()%41))
-					genespop[indice]->s[j]->ft[k]=-1;
-			}
+			else if((!rand()%41))
+				genespop[indice]->s[j]->ft[rand()%nbmaxft]=-1;
 
 			if(!(rand()%11))
 				genespop[indice]->s[j]->e=rand()%23;

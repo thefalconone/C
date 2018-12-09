@@ -5,7 +5,9 @@ stage* initialisefusee(){
 	//2 solar panels + 1 battery bank + 1 probodobodyne OKTO2
 	//s->drymass= 0.02*2 + 0.01 + 0.04;
 	//MK3 capsule + heatshield + parachute
-	s->drymass=2.72 + 1.3 + 0.3;
+	//s->drymass=2.72 + 1.3 + 0.3;
+	//Rockomax Jumbo-64 Fuel Tank
+	s->drymass=36;
 	s->totalmass=s->drymass;
 	s->ft=NULL;
 	s->under=NULL;
@@ -187,9 +189,11 @@ int costfusee(stage* s){
 }
 
 float scoretwr(stage* s){
-	float max=8, min=1;//tout ce qu'est au dessus de 1 n'est pas necessaire
+	float max=0, min=5;//tout ce qu'est au dessus de 1 n'est pas necessaire
 	while(s->under!=NULL){
 		s=s->under;
+		if(s->totalmass==s->drymass)
+			min=0;
 		float stagetwr= s->e.thrust / (s->totalmass*9.81);
 		if(stagetwr<min)
 			min=stagetwr;
@@ -197,24 +201,25 @@ float scoretwr(stage* s){
 			max=stagetwr;
 	}
 	//au dela de 5 on perds
-	int rep=min;
-	if(max>8) rep=0.1;
+	float rep=min;
+	if(max>5) rep=0.1;
+	if(min<0.5) rep/=10;
 	return rep;
 }
 
 float mintwr(stage* s){
-	float rep=8;//tout ce qu'est au dessus de 1 n'est pas necessaire
+	float rep=8;
 	while(s->under!=NULL){
 		s=s->under;
+		if(s->totalmass==s->drymass)
+			rep=0;
 		float stagetwr= s->e.thrust / (s->totalmass*9.81);
 		if(stagetwr<rep)
 			rep=stagetwr;
 	}
-	//au dela de 5 on perds
-	if(rep>8) rep=0;
 	return rep;
 }
 
 float scorefusee(stage* s, float moddeltav, float modcost, float modtwr){
-	return pow(deltav(s), moddeltav) * pow(1000*scoretwr(s), modtwr) / pow(costfusee(s), modcost);
+	return pow(deltav(s), moddeltav) * pow(10000*scoretwr(s), modtwr) / pow(costfusee(s), modcost);
 }
