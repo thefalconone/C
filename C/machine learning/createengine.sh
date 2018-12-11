@@ -14,7 +14,7 @@ do
 	#amount(pour les solidfuels)
 	grep ^\.\.amount $fich >> tempengine.txt
 	#isp
-	grep ^\.\.\.key...0 $fich >> tempengine.txt
+	grep ^\.\.\.key...0 $fich | cut -f1,2,3,4 -d " " >> tempengine.txt
 	#thrust
 	grep ^\.\.maxThrust $fich >> tempengine.txt
 done

@@ -9,5 +9,3 @@ interface des mods et affichage de la fusée en html
 		nbpop, nbmut, ratiokill (peut etre les % de mutation)
 		faire un script qui construit le define
 		faire un script qui calcule l'intervalle de confiance
-
-changer le script create engine pour avoir cut -f1,2,3 -d " "

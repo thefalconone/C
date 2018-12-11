@@ -6,19 +6,13 @@ int main(int argc, char* argv[]){
 
 	engine* listeng=lireengtxt();
 	fueltank* listft=lirefttxt();
-	char s[1000];
-	printf("ok\n");
-	scanf("%s",s);
 
 	//int nbgenerations=100, nbtry=atoi(argv[1]);
 	//float score[nbtry];
-	if(listeng!=NULL && listft!=NULL){//si les fichiers ont bien étés ouverts
-		printf("ok\n");
-		scanf("%s",s);
+	if(listeng!=NULL && listft!=NULL)//si les fichiers ont bien étés ouverts
 		genetic(listft, listeng,1);
 		//for(int i=0; i<nbtry; i++)
 			//score[i]=genetic(listft, listeng, nbgenerations);
-	}
 
 /*
 	for(int j=0; j<nbtry; j++)

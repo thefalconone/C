@@ -1,12 +1,125 @@
 #include "secondary.h"
 #include "define.h"
 
+void quicksort(float** number,int first,int last){
+	int i, j, pivot;
+	float* temp;
+
+	if(first<last){
+		pivot=first;
+		i=first;
+		j=last;
+
+		while(i<j){
+			while(number[i][1]<=number[pivot][1] && i<last)
+			i++;
+			while(number[j][1]>number[pivot][1])
+			j--;
+			if(i<j){
+				temp=number[i];
+				number[i]=number[j];
+				number[j]=temp;
+			}
+		}
+
+		temp=number[pivot];
+		number[pivot]=number[j];
+		number[j]=temp;
+		quicksort(number,first,j-1);
+		quicksort(number,j+1,last);
+
+	}
+}
+
+//il y a 41 fuel tanks et 24 engines
+//rempli le génome de gènes random
+genestage* initialisegenestage(){
+
+	genestage* s=malloc(sizeof(*s));
+
+	s->ft=malloc(sizeof(&s->ft)*nbmaxft);
+	for(int i=0; i<nbmaxft; i++){
+
+		//2 chances sur 3
+		if(!(rand()%3))
+			s->ft[i]=rand()%41;
+		else
+			s->ft[i]=-1;//no ft
+
+	}
+	s->e=rand()%24;
+	return s;
+}
+
+void freegenestage(genestage* s){
+	free(s->ft);
+	free(s);
+}
+
+gene* initialisegene(){
+	gene* g=malloc(sizeof(*g));
+	g->s=malloc(sizeof(&g->s)*nbmaxstages);
+
+	for(int i=0; i<nbmaxstages; i++)
+		g->s[i]=initialisegenestage();
+
+	return g;
+}
+
+void freegene(gene* g){
+	for(int i=0; i<nbmaxstages; i++)
+		freegenestage(g->s[i]);
+	free(g->s);
+	free(g);
+}
+
+//mets des satellites dans toutes les fusées mais rien d'autre
+stage** initialisepopfusee(){
+	stage** pop=malloc(sizeof(*pop)*nbpop);
+	for(int i=0; i<nbpop; i++)
+		pop[i]=initialisefusee();
+	return pop;
+}
+
+void freepopfusee(stage** pop){
+	for(int i=0; i<nbpop; i++)
+		freefusee(pop[i]);
+	free(pop);
+}
+
+gene** initialisepopgenes(){
+	gene** genespop=malloc(sizeof(*genespop)*nbpop);
+	for(int i=0; i<nbpop; i++)
+		genespop[i]=initialisegene();
+	return genespop;
+}
+
+void freepopgenes(gene** genespop){
+	for(int i=0; i<nbpop; i++)
+		freegene(genespop[i]);
+	free(genespop);
+}
+
 //rempli la pop grâce aux gènes
 void construire(fueltank* listft, engine* listeng, stage** pop, gene** genespop){
 	for(int i=0; i<nbpop; i++)
 		for(int j=0; j<nbmaxstages; j++)
-			if(genespop[i]->s[j]->e!=-1)//engine=-1 -> stage vide
-				addstage(pop[i], nbmaxft, genespop[i]->s[j]->ft, listft, listeng[ genespop[i]->s[j]->e ] );
+			addstage(pop[i], nbmaxft, genespop[i]->s[j]->ft, listft, listeng[ genespop[i]->s[j]->e ] );
+}
+
+void affichage(stage** pop, float** scores, int usercontinue){
+	//calcul de la moyenne
+	float scoremoy;
+	for(int i=0; i<nbpop; i++)
+		scoremoy+=scores[i][1]; 
+	scoremoy/=nbpop;
+
+	if(!usercontinue){
+		int best=(int)scores[nbpop-1][0];
+		afficherfusee(pop[best]);
+		printf("%.0fΔv	%d$	minTWR:%.3f\n", deltav(pop[best]), costfusee(pop[best]), mintwr(pop[best]) );
+	}
+	printf("meilleur: %.0f		moyenne: %.0f\n",scores[nbpop-1][1], scoremoy);
 }
 
 //renvoie un tableau de scores à coté de leur indices
@@ -82,12 +195,24 @@ int* tue(float** scores, int nbtokill){
 	return vivants;
 }
 
+void recopiestage(genestage* colle, genestage* copie){
+	for(int i=0; i<nbmaxft; i++)
+		colle->ft[i]=copie->ft[i];
+	colle->e=copie->e;
+}
+
+void recopiegene(gene** colle, gene** copie){
+	for(int i=0; i<nbpop; i++)
+		for(int j=0; j<nbmaxstages; j++)
+			recopiestage(colle[i]->s[j],copie[i]->s[j]);
+}
+
 float reproduire(gene** genespop, stage** pop, int usercontinue){
 
 	//SELECTION
 	float** scores=remplirscorestries(pop);
 	float best=scores[nbpop-1][1];
-	affichagegenbest(pop, scores, usercontinue);
+	affichage(pop, scores, usercontinue);
 
 	//on tue nbpop/2 de la population
 	int* vivants=tue(scores, (int)(nbpop*ratiokill));
@@ -140,9 +265,6 @@ float genetic(fueltank* listft, engine* listeng, int nbgenerations){
 
 	gene** genespop=initialisepopgenes();
 	float best=0;
-	char s[1000];
-	printf("debutgenetic\n");
-	scanf("%s",s);
 
 	int usercontinue=nbgenerations;//nb de genrations à calculer avant d'afficher le resultat
 	while(usercontinue!=0){//pour avancer d'une génération à la fois
@@ -150,18 +272,11 @@ float genetic(fueltank* listft, engine* listeng, int nbgenerations){
 
 		//construire la nouvelle génération et reset la precedente
 		stage** pop=initialisepopfusee();
-		printf("ok initialisepopfusee\n");
-		scanf("%s",s);
 		construire(listft, listeng, pop, genespop);
-		afficherfusee(pop[0]);
-		printf("ok construire\n");
-		scanf("%s",s);
 
 		//evaluer la génération et la faire reproduire
 		//les meilleurs partagent leurs gènes par bloc de stage
 		best=reproduire(genespop, pop, usercontinue);
-		printf("ok reproduire\n");
-		scanf("%s",s);
 		freepopfusee(pop);
 		
 		if(!usercontinue){//tant qu'il est pas égal à 0
