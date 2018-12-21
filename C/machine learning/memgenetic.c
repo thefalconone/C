@@ -39,16 +39,16 @@ genestage* initialisegenestage(){
 	s->ft=malloc(sizeof(&s->ft)*nbmaxft);
 	for(int i=0; i<nbmaxft; i++){
 
-		if(!(rand()%3))
+		if(rand()%3)//2 chances sur 3 qu'il y ait un ft
 			s->ft[i]=rand()%41;
-		else
+		else//1 chance sur 3 vide
 			s->ft[i]=-1;//no ft
 	}
 
-	if(rand()%3)//1 chance sur 3 que le stage soit vide
-		s->e=-1;
-	else
+	if(rand()%3)//2 chances sur 3 que le stage soit pas vide
 		s->e=rand()%24;
+	else//1 chance sur 3 vide
+		s->e=-1;
 
 	return s;
 }

@@ -3,10 +3,13 @@
 
 //rempli la pop grâce aux gènes
 void construire(fueltank* listft, engine* listeng, stage** pop, gene** genespop){
-	for(int i=0; i<nbpop; i++)
-		for(int j=0; j<nbmaxstages; j++)
-			if(genespop[i]->s[j]->e!=-1)//engine=-1 -> stage vide
+	for(int i=0; i<nbpop; i++){
+		for(int j=0; j<nbmaxstages; j++){
+			if(genespop[i]->s[j]->e!=-1){//engine=-1 -> stage vide
 				addstage(pop[i], nbmaxft, genespop[i]->s[j]->ft, listft, listeng[ genespop[i]->s[j]->e ] );
+			}
+		}
+	}
 }
 
 //renvoie un tableau de scores à coté de leur indices
@@ -140,9 +143,6 @@ float genetic(fueltank* listft, engine* listeng, int nbgenerations){
 
 	gene** genespop=initialisepopgenes();
 	float best=0;
-	char s[1000];
-	printf("debutgenetic\n");
-	scanf("%s",s);
 
 	int usercontinue=nbgenerations;//nb de genrations à calculer avant d'afficher le resultat
 	while(usercontinue!=0){//pour avancer d'une génération à la fois
@@ -150,18 +150,11 @@ float genetic(fueltank* listft, engine* listeng, int nbgenerations){
 
 		//construire la nouvelle génération et reset la precedente
 		stage** pop=initialisepopfusee();
-		printf("ok initialisepopfusee\n");
-		scanf("%s",s);
 		construire(listft, listeng, pop, genespop);
-		afficherfusee(pop[0]);
-		printf("ok construire\n");
-		scanf("%s",s);
 
 		//evaluer la génération et la faire reproduire
 		//les meilleurs partagent leurs gènes par bloc de stage
 		best=reproduire(genespop, pop, usercontinue);
-		printf("ok reproduire\n");
-		scanf("%s",s);
 		freepopfusee(pop);
 		
 		if(!usercontinue){//tant qu'il est pas égal à 0

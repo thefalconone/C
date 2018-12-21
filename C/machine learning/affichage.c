@@ -62,10 +62,13 @@ void affichagegenbest(stage** pop, float** scores, int usercontinue){
 		scoremoy+=scores[i][1]; 
 	scoremoy/=nbpop;
 
-	if(!usercontinue){
+	if(!usercontinue){//si le compteur est à 0
+		//on affiche la meilleure fusee
 		int best=(int)scores[nbpop-1][0];
 		afficherfusee(pop[best]);
+
 		printf("%.0fΔv	%d$	minTWR:%.3f\n", deltav(pop[best]), costfusee(pop[best]), mintwr(pop[best]) );
 	}
+	//on affiche ca à  chaque génération
 	printf("meilleur: %.0f		moyenne: %.0f\n",scores[nbpop-1][1], scoremoy);
 }

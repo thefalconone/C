@@ -46,7 +46,7 @@ float stagedrymass(stage* s){
 		for(int i=0; i<s->nbft; i++)
 			rep+= s->ft[i].drymass + 0.005*(s->ft[i].lf+s->ft[i].ox) + 0.004*s->ft[i].mo;
 
-	//consomme tout sauf mo, ox
+	//consomme tout sauf mo et ox
 	else if(s->e.type==nuclear)
 		for(int i=0; i<s->nbft; i++)
 			rep+= s->ft[i].drymass + 0.005*s->ft[i].ox + 0.004*s->ft[i].mo;
@@ -93,26 +93,24 @@ int stagesf(stage* s){
 }
 
 void addstage(stage* s, int nbmaxft, int* indiceft, fueltank* listft, engine e){
-	float totalmass=0;
-	totalmass += s->totalmass;
-	while(s->under!=NULL){
-		totalmass += s->totalmass;
-		s=s->under;
-	}
+
 	//on est au dernier stage : s->under=NULL
 	stage* under=malloc(sizeof(*under));
 
-	int vraift=0;
+	//calcul du nombre de fueltank, si le nombre est -1, il n'y en a pas
+	int nbft=0;
 	for(int i=0; i<nbmaxft; i++)
 		if(indiceft[i]!=-1)
-			vraift++;
-	under->ft=malloc(sizeof(*under->ft)*vraift);
-	under->nbft=vraift;
-	vraift=0;
+			nbft++;
+
+	//ajout des fueltank
+	under->ft=malloc(sizeof(*under->ft)*nbft);
+	under->nbft=nbft;
+	nbft=0;
 	for (int i=0; i<nbmaxft; i++){
 		if(indiceft[i]!=-1){
-			under->ft[vraift]=listft[indiceft[i]];
-			vraift++;
+			under->ft[nbft]=listft[indiceft[i]];
+			nbft++;
 		}
 	}
 	under->e=e;
@@ -177,5 +175,9 @@ float mintwr(stage* s){
 }
 
 float scorefusee(stage* s, float moddeltav, float modcost, float modtwr){
-	return pow(deltav(s), moddeltav) * pow(10000*scoretwr(s), modtwr) / pow(costfusee(s), modcost);
+	int cost=costfusee(s);
+	float score=0;
+	if(cost)//si le coût est nul, le score l'est aussi, on évite une division par 0
+		score= pow(deltav(s), moddeltav) * pow(10000*scoretwr(s), modtwr) / pow(cost, modcost);
+	return score;
 }
