@@ -67,7 +67,7 @@ int* tue(float** scores, int nbtokill){
 	int* vivants=malloc( sizeof(*vivants)*(nbpop-nbtokill) );
 	int nbtues=0;
 	while(nbtues<nbtokill){
-		int indice=rand()%nbpop;//entre 0 et 99
+		int indice=rand()%nbpop;//entre 0 et nbpop-1
 		char existe=0;
 		//recherche de l'existance de l'indice dans le tableau
 		for(int i=0; i<nbtues; i++)
@@ -92,24 +92,29 @@ float reproduire(gene** genespop, stage** pop, int usercontinue){
 	float best=scores[nbpop-1][1];
 	affichagegenbest(pop, scores, usercontinue);
 
-	//on tue nbpop/2 de la population
-	int* vivants=tue(scores, (int)(nbpop*ratiokill));
+	//on tue nbpop*ratiokill de la population
+	int nbtue=(int)(nbpop*ratiokill);
+	int nbvivants=nbpop-nbtue;
+	int* vivants=tue(scores, nbtue);
 	freescores(scores);
 	//dorenavant in travaille sur les fusées d'indice vivants[xx];
 
 	//MUTATION
 	for(int i=0; i<nbmut; i++){//seul nbmut fusées mutent
-		int indice=vivants[rand()%(nbpop/2)];
+		int indice=vivants[rand()% nbvivants];
 		for(int j=0; j<nbmaxstages; j++){
 
-			if(!(rand()%11))
+			if(!(rand()%11))// 1/10
 				genespop[indice]->s[j]->ft[rand()%nbmaxft]=rand()%40;
 
-			else if((!rand()%41))
+			else if((!rand()%41))// 1/40
 				genespop[indice]->s[j]->ft[rand()%nbmaxft]=-1;
 
-			if(!(rand()%11))
+			if(!(rand()%11))// 1/10
 				genespop[indice]->s[j]->e=rand()%23;
+
+			else if((!rand()%41))// 1/40
+				genespop[indice]->s[j]->e=rand()%-1;
 
 		}
 	}
@@ -117,22 +122,29 @@ float reproduire(gene** genespop, stage** pop, int usercontinue){
 	//CROSS-OVER
 	gene** newgenespop=initialisepopgenes();
 
-	for(int e=0; e<2; e++){//nbpop/2 papas et mamans en même temps donc les couples font 2 enfants
+	//printf("nbvivants=%d nbtue=%d\n",nbvivants,nbtue);
+	int nbenfants=0;
+	while(nbenfants<nbpop-1){
 
-		//creation d'un tableau de nbpop/2 randoms
-		int* appareilles=appareillage(nbpop/2);
+		//creation d'un tableau qui relie 2 vivants entre eux (appareillage[i] et i)
+		int* appareilles=appareillage(nbvivants);
 
-		for(int i=0; i<nbpop/2; i++){
+		for(int i=0; i<nbvivants && nbenfants<nbpop; i++){
+			//printf("%d\n",nbenfants);
 
 			for(int j=0; j<nbmaxstages; j++){
+				//on prends un génome du père ou de la mère au hasard
 				if(rand()%2)
-					recopiestage(newgenespop[i+e*nbpop/2]->s[j], genespop[vivants[i]]->s[j]);
+					recopiestage(newgenespop[nbenfants]->s[j], genespop[ vivants[i] ]->s[j]);
 				else
-					recopiestage(newgenespop[i+e*nbpop/2]->s[j], genespop[ vivants[ appareilles[i] ] ]->s[j]);
+					recopiestage(newgenespop[nbenfants]->s[j], genespop[ vivants[ appareilles[i] ] ]->s[j]);
 			}
+			nbenfants++;
 		}
+
 		free(appareilles);
 	}
+
 	recopiegene(genespop,newgenespop);
 	free(vivants);
 	freepopgenes(newgenespop);

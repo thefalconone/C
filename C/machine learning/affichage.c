@@ -37,11 +37,11 @@ void afficherfusee(stage* s){
 	if(s->under!=NULL){//au cas ou la fusee soit vide
 		printf("\nfusee:\n\n");
 		s=s->under;
-		afficherstage(s);
 		while(s->under!=NULL){
-			s=s->under;
 			afficherstage(s);
+			s=s->under;
 		}
+		afficherstage(s);
 	}
 }
 
@@ -56,6 +56,7 @@ void afficherlisteng(engine* listeng, int l){
 }
 
 void affichagegenbest(stage** pop, float** scores, int usercontinue){
+	
 	//calcul de la moyenne
 	float scoremoy;
 	for(int i=0; i<nbpop; i++)
@@ -70,5 +71,6 @@ void affichagegenbest(stage** pop, float** scores, int usercontinue){
 		printf("%.0fΔv	%d$	minTWR:%.3f\n", deltav(pop[best]), costfusee(pop[best]), mintwr(pop[best]) );
 	}
 	//on affiche ca à  chaque génération
-	printf("meilleur: %.0f		moyenne: %.0f\n",scores[nbpop-1][1], scoremoy);
+	printf("meilleur: %.2e		moyenne: %.2e\n",scores[nbpop-1][1], scoremoy);
+
 }

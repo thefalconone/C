@@ -2,12 +2,9 @@
 
 stage* initialisefusee(){
 	stage* s=malloc(sizeof(*s));
-	//2 solar panels + 1 battery bank + 1 probodobodyne OKTO2
-	//s->drymass= 0.02*2 + 0.01 + 0.04;
-	//MK3 capsule + heatshield + parachute
-	//s->drymass=2.72 + 1.3 + 0.3;
-	//Rockomax Jumbo-64 Fuel Tank
-	s->drymass=36;
+	s->drymass= 0.02*2 + 0.01 + 0.04;//2 solar panels + 1 battery bank + 1 probodobodyne OKTO2
+	//s->drymass=2.72 + 1.3 + 0.3;//MK3 capsule + heatshield + parachute
+	//s->drymass=36;//Rockomax Jumbo-64 Fuel Tank
 	s->totalmass=s->drymass;
 	s->ft=NULL;
 	s->under=NULL;
@@ -93,6 +90,9 @@ int stagesf(stage* s){
 }
 
 void addstage(stage* s, int nbmaxft, int* indiceft, fueltank* listft, engine e){
+	//on descends au dernier étage
+	while(s->under!=NULL)
+		s=s->under;
 
 	//on est au dernier stage : s->under=NULL
 	stage* under=malloc(sizeof(*under));
@@ -142,25 +142,6 @@ int costfusee(stage* s){
 	return rep;
 }
 
-float scoretwr(stage* s){
-	float max=0, min=5;//tout ce qu'est au dessus de 1 n'est pas necessaire
-	while(s->under!=NULL){
-		s=s->under;
-		if(s->totalmass==s->drymass)
-			min=0;
-		float stagetwr= s->e.thrust / (s->totalmass*9.81);
-		if(stagetwr<min)
-			min=stagetwr;
-		if(stagetwr>max)
-			max=stagetwr;
-	}
-	//au dela de 5 on perds
-	float rep=min;
-	if(max>5) rep=0.1;
-	if(min<0.5) rep/=10;
-	return rep;
-}
-
 float mintwr(stage* s){
 	float rep=8;
 	while(s->under!=NULL){
@@ -172,6 +153,18 @@ float mintwr(stage* s){
 			rep=stagetwr;
 	}
 	return rep;
+}
+
+float scoretwr(stage* s){
+	//tout ce qu'est au dessus du softmax n'est pas pénalisant mais n'est pas récompensé non plu
+	//tout ce qu'est au dessus du hardmax est pénalisé
+	float softmax=1, hardmax=5;
+	float twr=mintwr(s);
+	if(twr>hardmax)
+		twr=0;
+	else if(twr>softmax)
+		twr=softmax;
+	return twr;
 }
 
 float scorefusee(stage* s, float moddeltav, float modcost, float modtwr){

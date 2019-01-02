@@ -8,15 +8,18 @@ int main(int argc, char* argv[]){
 	//lecture des fichiers engine.txt et fueltank.txt
 	engine* listeng=lireengtxt();
 	fueltank* listft=lirefttxt();
-
-	//int nbgenerations=100, nbtry=atoi(argv[1]);
-	//float score[nbtry];
+	genetic(listft, listeng, 1);/*
+	int nbgenerations=100, nbtry=atoi(argv[1]);
+	float score[nbtry], moyenne=0;
 	if(listeng!=NULL && listft!=NULL){//si les fichiers ont bien étés ouverts
 		//on lance une génération
-		genetic(listft, listeng,1);
-		//for(int i=0; i<nbtry; i++)
-			//score[i]=genetic(listft, listeng, nbgenerations);
+		//genetic(listft, listeng,1);
+		for(int i=0; i<nbtry; i++){
+			score[i]=genetic(listft, listeng, nbgenerations);
+			moyenne+=score[i]/nbtry;
+		}
 	}
+	printf("%.2e\n", moyenne);*/
 
 /*
 	for(int j=0; j<nbtry; j++)
