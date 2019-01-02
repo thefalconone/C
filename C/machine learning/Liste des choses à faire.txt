@@ -1,11 +1,6 @@
-Liste des choses à faire:
+﻿Liste des choses à faire:
 
 interface des mods et affichage de la fusée en html
 	menu
-		generer les fichiers listft...
 		afficher la liste
 		modifier les mods
-	trouver les paramètres idéaux pour une moyenne de nbgen=100 optimale
-		nbpop, nbmut, ratiokill (peut etre les % de mutation)
-		faire un script qui construit le define
-		faire un script qui calcule l'intervalle de confiance

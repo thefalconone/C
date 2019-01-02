@@ -55,3 +55,23 @@ void afficherlisteng(engine* listeng, int l){
 	for(int i=0; i<l; i++)
 		affichereng(listeng[i]);
 }
+
+void affichagegenbest(stage** pop, float** scores, int usercontinue){
+	
+	//calcul de la moyenne
+	float scoremoy;
+	for(int i=0; i<nbpop; i++)
+		scoremoy+=scores[i][1]; 
+	scoremoy/=nbpop;
+
+	if(!usercontinue){//si le compteur est à 0
+		//on affiche la meilleure fusee
+		int best=(int)scores[nbpop-1][0];
+		afficherfusee(pop[best]);
+
+		printf("%.0fΔv	%d$	minTWR:%.3f\n", deltav(pop[best]), costfusee(pop[best]), mintwr(pop[best]) );
+	}
+	//on affiche ca à  chaque génération
+	printf("meilleur: %.2e		moyenne: %.2e\n",scores[nbpop-1][1], scoremoy);
+
+}

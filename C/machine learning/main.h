@@ -25,6 +25,8 @@ typedef struct stage{
 	struct stage* under;
 }stage;
 
+void menu();//fonction principale
+
 //fusee.c
 float deltav(stage* s);
 int costfusee(stage* s);
@@ -35,7 +37,7 @@ fueltank* lirefttxt();
 engine* lireengtxt();
 
 //genetic.c
-float genetic(fueltank* listft, engine* listeng, int nbgenerations);
+void genetic(fueltank* listft, engine* listeng);
 
 //affichage.c
 void affichereng(engine e);
@@ -44,4 +46,3 @@ void afficherstage(stage* s);
 void afficherfusee(stage* s);
 void afficherlistft(fueltank* listft, int l);
 void afficherlisteng(engine* listeng, int l);
-void affichagegenbest(stage** pop, float** scores, int usercontinue);

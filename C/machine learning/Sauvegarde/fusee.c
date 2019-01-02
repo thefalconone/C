@@ -1,13 +1,13 @@
 #include "secondary.h"
 
+extern int nbmaxft;
+extern float moddeltav, modcost, modtwr;
+
 stage* initialisefusee(){
 	stage* s=malloc(sizeof(*s));
-	//2 solar panels + 1 battery bank + 1 probodobodyne OKTO2
-	//s->drymass= 0.02*2 + 0.01 + 0.04;
-	//MK3 capsule + heatshield + parachute
-	//s->drymass=2.72 + 1.3 + 0.3;
-	//Rockomax Jumbo-64 Fuel Tank
-	s->drymass=36;
+	s->drymass= 0.02*2 + 0.01 + 0.04;//2 solar panels + 1 battery bank + 1 probodobodyne OKTO2
+	//s->drymass=2.72 + 1.3 + 0.3;//MK3 capsule + heatshield + parachute
+	//s->drymass=36;//Rockomax Jumbo-64 Fuel Tank
 	s->totalmass=s->drymass;
 	s->ft=NULL;
 	s->under=NULL;
@@ -46,7 +46,7 @@ float stagedrymass(stage* s){
 		for(int i=0; i<s->nbft; i++)
 			rep+= s->ft[i].drymass + 0.005*(s->ft[i].lf+s->ft[i].ox) + 0.004*s->ft[i].mo;
 
-	//consomme tout sauf mo, ox
+	//consomme tout sauf mo et ox
 	else if(s->e.type==nuclear)
 		for(int i=0; i<s->nbft; i++)
 			rep+= s->ft[i].drymass + 0.005*s->ft[i].ox + 0.004*s->ft[i].mo;
@@ -92,71 +92,28 @@ int stagesf(stage* s){
 	return rep;
 }
 
-void affichereng(engine e){
-	printf("engine: %s\n", e.name);
-	if(e.type==liquid)
-		printf("Liquid");
-	else if(e.type==solid)
-		printf("Solid");
-	else if(e.type==monoprop)
-		printf("Monop");
-	else
-		printf("Nuclear");
-
-	printf("	%.3ft	%dkN	%ds	%d$", e.mass, e.thrust, e.isp, e.cost);
-	if(e.lf)
-		printf("	%dlf", e.lf); 
-	if(e.sf)
-		printf("	%dsf", e.sf); 
-	if(e.ox)
-		printf("	%dox", e.ox); 
-	printf("\n");
-}
-
-void afficherft(fueltank ft){
-	printf("fuel tank: %s\n%.3ft	%dlf	%dox	%dmo	%d$\n",ft.name, ft.drymass, ft.lf, ft.ox, ft.mo, ft.cost);
-}
-
-void afficherstage(stage* s){
-	for(int i=0; i<s->nbft; i++)
-		afficherft(s->ft[i]);
-	affichereng(s->e);
-	printf("\n");
-}
-
-void afficherfusee(stage* s){
-	if(s->under!=NULL){//au cas ou la fusee soit vide
-		printf("\nfusee:\n\n");
+void addstage(stage* s, int* indiceft, fueltank* listft, engine e){
+	//on descends au dernier étage
+	while(s->under!=NULL)
 		s=s->under;
-		afficherstage(s);
-		while(s->under!=NULL){
-			s=s->under;
-			afficherstage(s);
-		}
-	}
-}
 
-void addstage(stage* s, int nbmaxft, int* indiceft, fueltank* listft, engine e){
-	float totalmass=0;
-	totalmass += s->totalmass;
-	while(s->under!=NULL){
-		totalmass += s->totalmass;
-		s=s->under;
-	}
 	//on est au dernier stage : s->under=NULL
 	stage* under=malloc(sizeof(*under));
 
-	int vraift=0;
+	//calcul du nombre de fueltank, si le nombre est -1, il n'y en a pas
+	int nbft=0;
 	for(int i=0; i<nbmaxft; i++)
 		if(indiceft[i]!=-1)
-			vraift++;
-	under->ft=malloc(sizeof(*under->ft)*vraift);
-	under->nbft=vraift;
-	vraift=0;
+			nbft++;
+
+	//ajout des fueltank
+	under->ft=malloc(sizeof(*under->ft)*nbft);
+	under->nbft=nbft;
+	nbft=0;
 	for (int i=0; i<nbmaxft; i++){
 		if(indiceft[i]!=-1){
-			under->ft[vraift]=listft[indiceft[i]];
-			vraift++;
+			under->ft[nbft]=listft[indiceft[i]];
+			nbft++;
 		}
 	}
 	under->e=e;
@@ -188,25 +145,6 @@ int costfusee(stage* s){
 	return rep;
 }
 
-float scoretwr(stage* s){
-	float max=0, min=5;//tout ce qu'est au dessus de 1 n'est pas necessaire
-	while(s->under!=NULL){
-		s=s->under;
-		if(s->totalmass==s->drymass)
-			min=0;
-		float stagetwr= s->e.thrust / (s->totalmass*9.81);
-		if(stagetwr<min)
-			min=stagetwr;
-		if(stagetwr>max)
-			max=stagetwr;
-	}
-	//au dela de 5 on perds
-	float rep=min;
-	if(max>5) rep=0.1;
-	if(min<0.5) rep/=10;
-	return rep;
-}
-
 float mintwr(stage* s){
 	float rep=8;
 	while(s->under!=NULL){
@@ -220,6 +158,22 @@ float mintwr(stage* s){
 	return rep;
 }
 
-float scorefusee(stage* s, float moddeltav, float modcost, float modtwr){
-	return pow(deltav(s), moddeltav) * pow(10000*scoretwr(s), modtwr) / pow(costfusee(s), modcost);
+float scoretwr(stage* s){
+	//tout ce qu'est au dessus du softmax n'est pas pénalisant mais n'est pas récompensé non plu
+	//tout ce qu'est au dessus du hardmax est pénalisé
+	float softmax=1, hardmax=5;
+	float twr=mintwr(s);
+	if(twr>hardmax)
+		twr=0;
+	else if(twr>softmax)
+		twr=softmax;
+	return twr;
+}
+
+float scorefusee(stage* s){
+	int cost=costfusee(s);
+	float score=0;
+	if(cost)//si le coût est nul, le score l'est aussi, on évite une division par 0
+		score= pow(deltav(s), moddeltav) * pow(10000*scoretwr(s), modtwr) / pow(cost, modcost);
+	return score;
 }

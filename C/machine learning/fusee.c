@@ -1,5 +1,8 @@
 #include "secondary.h"
 
+extern int nbmaxft;
+extern float moddeltav, modcost, modtwr;
+
 stage* initialisefusee(){
 	stage* s=malloc(sizeof(*s));
 	s->drymass= 0.02*2 + 0.01 + 0.04;//2 solar panels + 1 battery bank + 1 probodobodyne OKTO2
@@ -89,7 +92,7 @@ int stagesf(stage* s){
 	return rep;
 }
 
-void addstage(stage* s, int nbmaxft, int* indiceft, fueltank* listft, engine e){
+void addstage(stage* s, int* indiceft, fueltank* listft, engine e){
 	//on descends au dernier étage
 	while(s->under!=NULL)
 		s=s->under;
@@ -167,7 +170,7 @@ float scoretwr(stage* s){
 	return twr;
 }
 
-float scorefusee(stage* s, float moddeltav, float modcost, float modtwr){
+float scorefusee(stage* s){
 	int cost=costfusee(s);
 	float score=0;
 	if(cost)//si le coût est nul, le score l'est aussi, on évite une division par 0

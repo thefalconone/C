@@ -1,12 +1,14 @@
 #include "secondary.h"
-#include "define.h"
+
+extern int nbpop, nbmut, nbgen, nbmaxft, nbmaxstages;
+extern float ratiokill;
 
 //rempli la pop grâce aux gènes
 void construire(fueltank* listft, engine* listeng, stage** pop, gene** genespop){
 	for(int i=0; i<nbpop; i++){
 		for(int j=0; j<nbmaxstages; j++){
 			if(genespop[i]->s[j]->e!=-1){//engine=-1 -> stage vide
-				addstage(pop[i], nbmaxft, genespop[i]->s[j]->ft, listft, listeng[ genespop[i]->s[j]->e ] );
+				addstage(pop[i], genespop[i]->s[j]->ft, listft, listeng[ genespop[i]->s[j]->e ] );
 			}
 		}
 	}
@@ -29,7 +31,7 @@ float** remplirscorestries(stage** pop){
 	for(int i=0; i<nbpop; i++){
 		scores[i]=malloc(sizeof(*scores[i])*2);//pour indice et score correspondant
 		scores[i][0]=i;
-		scores[i][1]=scorefusee(pop[i], moddeltav, modcost, modtwr);
+		scores[i][1]=scorefusee(pop[i]);
 	}
 	quicksort(scores,0,nbpop-1);
 	return scores;
@@ -85,12 +87,15 @@ int* tue(float** scores, int nbtokill){
 	return vivants;
 }
 
-float reproduire(gene** genespop, stage** pop, int usercontinue){
+void reproduire(gene** genespop, stage** pop, int usercontinue){
+	//si usercontinue=0, c'est la dernière generation
 
 	//SELECTION
 	float** scores=remplirscorestries(pop);
-	float best=scores[nbpop-1][1];
-	affichagegenbest(pop, scores, usercontinue);
+	
+	//affichage de la meilleure fusée de la dernière génération
+	if(!usercontinue)
+		afficherfusee(pop[ (int)scores[nbpop-1][0] ]);
 
 	//on tue nbpop*ratiokill de la population
 	int nbtue=(int)(nbpop*ratiokill);
@@ -148,15 +153,13 @@ float reproduire(gene** genespop, stage** pop, int usercontinue){
 	recopiegene(genespop,newgenespop);
 	free(vivants);
 	freepopgenes(newgenespop);
-	return best;
 }
 
-float genetic(fueltank* listft, engine* listeng, int nbgenerations){
+void genetic(fueltank* listft, engine* listeng){
 
 	gene** genespop=initialisepopgenes();
-	float best=0;
 
-	int usercontinue=nbgenerations;//nb de genrations à calculer avant d'afficher le resultat
+	int usercontinue=nbgen;//nb de genrations à calculer avant d'afficher le resultat
 	while(usercontinue!=0){//pour avancer d'une génération à la fois
 		usercontinue--;
 
@@ -166,15 +169,7 @@ float genetic(fueltank* listft, engine* listeng, int nbgenerations){
 
 		//evaluer la génération et la faire reproduire
 		//les meilleurs partagent leurs gènes par bloc de stage
-		best=reproduire(genespop, pop, usercontinue);
+		reproduire(genespop, pop, usercontinue);
 		freepopfusee(pop);
-		
-		if(!usercontinue){//tant qu'il est pas égal à 0
-			printf("Continuer combien de fois?\n");
-			fpurge(stdin);
-			scanf("%d",&usercontinue);
-		}
-		
 	}
-	return best;
 }

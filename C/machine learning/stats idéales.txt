@@ -1,5 +1,0 @@
-stats idéales
-pop:	900
-mut:	30
-ft:		1
-stages:	5

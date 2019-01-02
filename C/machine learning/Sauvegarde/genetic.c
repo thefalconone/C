@@ -1,125 +1,17 @@
 #include "secondary.h"
-#include "define.h"
 
-void quicksort(float** number,int first,int last){
-	int i, j, pivot;
-	float* temp;
-
-	if(first<last){
-		pivot=first;
-		i=first;
-		j=last;
-
-		while(i<j){
-			while(number[i][1]<=number[pivot][1] && i<last)
-			i++;
-			while(number[j][1]>number[pivot][1])
-			j--;
-			if(i<j){
-				temp=number[i];
-				number[i]=number[j];
-				number[j]=temp;
-			}
-		}
-
-		temp=number[pivot];
-		number[pivot]=number[j];
-		number[j]=temp;
-		quicksort(number,first,j-1);
-		quicksort(number,j+1,last);
-
-	}
-}
-
-//il y a 41 fuel tanks et 24 engines
-//rempli le génome de gènes random
-genestage* initialisegenestage(){
-
-	genestage* s=malloc(sizeof(*s));
-
-	s->ft=malloc(sizeof(&s->ft)*nbmaxft);
-	for(int i=0; i<nbmaxft; i++){
-
-		//2 chances sur 3
-		if(!(rand()%3))
-			s->ft[i]=rand()%41;
-		else
-			s->ft[i]=-1;//no ft
-
-	}
-	s->e=rand()%24;
-	return s;
-}
-
-void freegenestage(genestage* s){
-	free(s->ft);
-	free(s);
-}
-
-gene* initialisegene(){
-	gene* g=malloc(sizeof(*g));
-	g->s=malloc(sizeof(&g->s)*nbmaxstages);
-
-	for(int i=0; i<nbmaxstages; i++)
-		g->s[i]=initialisegenestage();
-
-	return g;
-}
-
-void freegene(gene* g){
-	for(int i=0; i<nbmaxstages; i++)
-		freegenestage(g->s[i]);
-	free(g->s);
-	free(g);
-}
-
-//mets des satellites dans toutes les fusées mais rien d'autre
-stage** initialisepopfusee(){
-	stage** pop=malloc(sizeof(*pop)*nbpop);
-	for(int i=0; i<nbpop; i++)
-		pop[i]=initialisefusee();
-	return pop;
-}
-
-void freepopfusee(stage** pop){
-	for(int i=0; i<nbpop; i++)
-		freefusee(pop[i]);
-	free(pop);
-}
-
-gene** initialisepopgenes(){
-	gene** genespop=malloc(sizeof(*genespop)*nbpop);
-	for(int i=0; i<nbpop; i++)
-		genespop[i]=initialisegene();
-	return genespop;
-}
-
-void freepopgenes(gene** genespop){
-	for(int i=0; i<nbpop; i++)
-		freegene(genespop[i]);
-	free(genespop);
-}
+extern int nbpop, nbmut, nbmaxft, nbmaxstages;
+extern float ratiokill;
 
 //rempli la pop grâce aux gènes
 void construire(fueltank* listft, engine* listeng, stage** pop, gene** genespop){
-	for(int i=0; i<nbpop; i++)
-		for(int j=0; j<nbmaxstages; j++)
-			addstage(pop[i], nbmaxft, genespop[i]->s[j]->ft, listft, listeng[ genespop[i]->s[j]->e ] );
-}
-
-void affichage(stage** pop, float** scores, int usercontinue){
-	//calcul de la moyenne
-	float scoremoy;
-	for(int i=0; i<nbpop; i++)
-		scoremoy+=scores[i][1]; 
-	scoremoy/=nbpop;
-
-	if(!usercontinue){
-		int best=(int)scores[nbpop-1][0];
-		afficherfusee(pop[best]);
-		printf("%.0fΔv	%d$	minTWR:%.3f\n", deltav(pop[best]), costfusee(pop[best]), mintwr(pop[best]) );
+	for(int i=0; i<nbpop; i++){
+		for(int j=0; j<nbmaxstages; j++){
+			if(genespop[i]->s[j]->e!=-1){//engine=-1 -> stage vide
+				addstage(pop[i], genespop[i]->s[j]->ft, listft, listeng[ genespop[i]->s[j]->e ] );
+			}
+		}
 	}
-	printf("meilleur: %.0f		moyenne: %.0f\n",scores[nbpop-1][1], scoremoy);
 }
 
 //renvoie un tableau de scores à coté de leur indices
@@ -139,7 +31,7 @@ float** remplirscorestries(stage** pop){
 	for(int i=0; i<nbpop; i++){
 		scores[i]=malloc(sizeof(*scores[i])*2);//pour indice et score correspondant
 		scores[i][0]=i;
-		scores[i][1]=scorefusee(pop[i], moddeltav, modcost, modtwr);
+		scores[i][1]=scorefusee(pop[i]);
 	}
 	quicksort(scores,0,nbpop-1);
 	return scores;
@@ -177,7 +69,7 @@ int* tue(float** scores, int nbtokill){
 	int* vivants=malloc( sizeof(*vivants)*(nbpop-nbtokill) );
 	int nbtues=0;
 	while(nbtues<nbtokill){
-		int indice=rand()%nbpop;//entre 0 et 99
+		int indice=rand()%nbpop;//entre 0 et nbpop-1
 		char existe=0;
 		//recherche de l'existance de l'indice dans le tableau
 		for(int i=0; i<nbtues; i++)
@@ -195,43 +87,37 @@ int* tue(float** scores, int nbtokill){
 	return vivants;
 }
 
-void recopiestage(genestage* colle, genestage* copie){
-	for(int i=0; i<nbmaxft; i++)
-		colle->ft[i]=copie->ft[i];
-	colle->e=copie->e;
-}
-
-void recopiegene(gene** colle, gene** copie){
-	for(int i=0; i<nbpop; i++)
-		for(int j=0; j<nbmaxstages; j++)
-			recopiestage(colle[i]->s[j],copie[i]->s[j]);
-}
-
 float reproduire(gene** genespop, stage** pop, int usercontinue){
+	//si usercontinue=0, c'est la dernière generation
 
 	//SELECTION
 	float** scores=remplirscorestries(pop);
 	float best=scores[nbpop-1][1];
-	affichage(pop, scores, usercontinue);
+	affichagegenbest(pop, scores, usercontinue);
 
-	//on tue nbpop/2 de la population
-	int* vivants=tue(scores, (int)(nbpop*ratiokill));
+	//on tue nbpop*ratiokill de la population
+	int nbtue=(int)(nbpop*ratiokill);
+	int nbvivants=nbpop-nbtue;
+	int* vivants=tue(scores, nbtue);
 	freescores(scores);
 	//dorenavant in travaille sur les fusées d'indice vivants[xx];
 
 	//MUTATION
 	for(int i=0; i<nbmut; i++){//seul nbmut fusées mutent
-		int indice=vivants[rand()%(nbpop/2)];
+		int indice=vivants[rand()% nbvivants];
 		for(int j=0; j<nbmaxstages; j++){
 
-			if(!(rand()%11))
+			if(!(rand()%11))// 1/10
 				genespop[indice]->s[j]->ft[rand()%nbmaxft]=rand()%40;
 
-			else if((!rand()%41))
+			else if((!rand()%41))// 1/40
 				genespop[indice]->s[j]->ft[rand()%nbmaxft]=-1;
 
-			if(!(rand()%11))
+			if(!(rand()%11))// 1/10
 				genespop[indice]->s[j]->e=rand()%23;
+
+			else if((!rand()%41))// 1/40
+				genespop[indice]->s[j]->e=rand()%-1;
 
 		}
 	}
@@ -239,22 +125,29 @@ float reproduire(gene** genespop, stage** pop, int usercontinue){
 	//CROSS-OVER
 	gene** newgenespop=initialisepopgenes();
 
-	for(int e=0; e<2; e++){//nbpop/2 papas et mamans en même temps donc les couples font 2 enfants
+	//printf("nbvivants=%d nbtue=%d\n",nbvivants,nbtue);
+	int nbenfants=0;
+	while(nbenfants<nbpop-1){
 
-		//creation d'un tableau de nbpop/2 randoms
-		int* appareilles=appareillage(nbpop/2);
+		//creation d'un tableau qui relie 2 vivants entre eux (appareillage[i] et i)
+		int* appareilles=appareillage(nbvivants);
 
-		for(int i=0; i<nbpop/2; i++){
+		for(int i=0; i<nbvivants && nbenfants<nbpop; i++){
+			//printf("%d\n",nbenfants);
 
 			for(int j=0; j<nbmaxstages; j++){
+				//on prends un génome du père ou de la mère au hasard
 				if(rand()%2)
-					recopiestage(newgenespop[i+e*nbpop/2]->s[j], genespop[vivants[i]]->s[j]);
+					recopiestage(newgenespop[nbenfants]->s[j], genespop[ vivants[i] ]->s[j]);
 				else
-					recopiestage(newgenespop[i+e*nbpop/2]->s[j], genespop[ vivants[ appareilles[i] ] ]->s[j]);
+					recopiestage(newgenespop[nbenfants]->s[j], genespop[ vivants[ appareilles[i] ] ]->s[j]);
 			}
+			nbenfants++;
 		}
+
 		free(appareilles);
 	}
+
 	recopiegene(genespop,newgenespop);
 	free(vivants);
 	freepopgenes(newgenespop);
