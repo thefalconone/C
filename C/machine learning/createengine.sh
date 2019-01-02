@@ -22,5 +22,7 @@ done
 
 grep -v .*Electric.* tempengine.txt > tempsanselec.txt
 sed -r "s/\t//ig" tempsanselec.txt > tempsanstab.txt
-sed -r "s/\r//ig" tempsanstab.txt >> engine.txt
+sed -r "s/\r//ig" tempsanstab.txt > tempsansretour.txt
+sed -r "s/^ //ig" tempsansretour.txt > tempnom.txt
+sed -r "s/\"//ig" tempnom.txt >> engine.txt
 rm -f *temp*

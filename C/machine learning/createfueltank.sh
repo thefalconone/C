@@ -18,5 +18,6 @@ done
 
 grep -v .*Module.* tempfueltank.txt > tempsansmod.txt
 sed -r "s/\t//ig" tempsansmod.txt > tempsanstab.txt
-sed -r "s/\r//ig" tempsanstab.txt >> fueltank.txt
+sed -r "s/\r//ig" tempsanstab.txt > tempsansretour.txt
+sed -r "s/^ //ig" tempsansretour.txt >> fueltank.txt
 rm -f *temp*
