@@ -1,9 +1,19 @@
+body
+{
+	font-family: arial;
+}
+
 table
 {
 	border-collapse: collapse;
-	border: 1px solid black;
+	border: 2px solid black;
 }
 .stage
 {
 	border-top: 1px solid black;
+	border-bottom: 1px solid black;
+}
+#stats
+{
+	border-bottom: 2px solid black;
 }

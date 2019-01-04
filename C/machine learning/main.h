@@ -25,12 +25,11 @@ typedef struct stage{
 	struct stage* under;
 }stage;
 
-void menu();//fonction principale
-
 //fusee.c
 float deltav(stage* s);
 int costfusee(stage* s);
-float mintwr(stage* s);
+float minfuseetwr(stage* s);
+float maxfuseetwr(stage* s);
 
 //fichier.c
 fueltank* lirefttxt();
@@ -40,10 +39,6 @@ engine* lireengtxt();
 void genetic(fueltank* listft, engine* listeng);
 
 //affichage.c
-void affichereng(engine e);
-void afficherft(fueltank ft);
-void afficherstage(stage* s);
-void afficherfusee(stage* s);
 void afficherlistft(fueltank* listft, int l);
 void afficherlisteng(engine* listeng, int l);
 void afficherfuseehtml(stage* s);

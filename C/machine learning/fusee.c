@@ -1,7 +1,7 @@
 #include "secondary.h"
 
-extern int nbmaxft;
-extern float moddeltav, modcost, modtwr, payload;
+extern int nbmaxft, mindv, maxdv, mincost, maxcost;
+extern float moddeltav, modcost, modtwr, payload, minusertwr, maxusertwr;
 
 stage* initialisefusee(){
 	stage* s=malloc(sizeof(*s));
@@ -143,8 +143,8 @@ int costfusee(stage* s){
 	return rep;
 }
 
-float mintwr(stage* s){
-	float rep=8;
+float minfuseetwr(stage* s){
+	float rep=10000;
 	while(s->under!=NULL){
 		s=s->under;
 		if(s->totalmass==s->drymass)
@@ -156,22 +156,44 @@ float mintwr(stage* s){
 	return rep;
 }
 
-float scoretwr(stage* s){
-	//tout ce qu'est au dessus du softmax n'est pas pénalisant mais n'est pas récompensé non plu
-	//tout ce qu'est au dessus du hardmax est pénalisé
-	float softmax=1, hardmax=5;
-	float twr=mintwr(s);
-	if(twr>hardmax)
-		twr=0;
-	else if(twr>softmax)
-		twr=softmax;
-	return twr;
+float maxfuseetwr(stage* s){
+	float rep=0;
+	while(s->under!=NULL){
+		s=s->under;
+		if(s->totalmass!=s->drymass){
+			float stagetwr= s->e.thrust / (s->drymass*9.81);
+			if(stagetwr>rep)
+				rep=stagetwr;
+		}
+	}
+	return rep;
 }
 
 float scorefusee(stage* s){
 	int cost=costfusee(s);
+	float dv=deltav(s), minftwr=minfuseetwr(s);
 	float score=0;
+
 	if(cost)//si le coût est nul, le score l'est aussi, on évite une division par 0
-		score= pow(deltav(s), moddeltav) * pow(10000*scoretwr(s), modtwr) / pow(cost, modcost);
+		score= pow(dv, moddeltav) * pow(10000*minftwr, modtwr) / pow(cost, modcost);
+
+	if(dv){
+		if(dv<mindv)
+			score *= dv/mindv;
+		if(maxdv!=-1 && dv>maxdv)//on a dépassé le max
+			score *= maxdv/dv;
+	}
+
+	float maxftwr=maxfuseetwr(s);
+	if(minftwr!=0 && minftwr<minusertwr)
+		score *= minftwr/minusertwr;
+	if(maxftwr!=0 && maxusertwr!=-1 && maxftwr>maxusertwr)
+		score *= maxusertwr/maxftwr;
+
+	if(cost<mincost)
+		score *= cost/mincost;
+	if(maxcost!=-1 && cost>maxcost)
+		score *= maxcost/cost;
+
 	return score;
 }

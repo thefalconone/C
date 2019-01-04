@@ -3,8 +3,8 @@
 //strictement entre 0 et 1
 //0.25 = on tue 25% de la pop
 //ratiokill ne fonctionne bien qu'avec la valeur 0.5
-float ratiokill=0.5, moddeltav=3, modcost=1, modtwr=1, payload=2.72 + 1.3 + 0.3;
-int nbpop=1000, nbmut=300, nbmaxft=3, nbmaxstages=5, nbgen=100;
+float ratiokill=0.5, moddeltav=6, modcost=1, modtwr=1, minusertwr=1, maxusertwr=5, payload=2.72 + 1.3 + 0.3;//poids d'une capsule
+int nbpop=1000, nbmut=300, nbmaxft=3, nbmaxstages=5, nbgen=100, mindv=0, maxdv=-1, mincost=0, maxcost=-1;
 
 int scanint(){
 	char s[1000];
@@ -72,13 +72,13 @@ void chargement(){
 	printf("Actuel: ");
 
 	if(payload==satellite)//2 solar panels + 1 battery bank + 1 probodobodyne OKTO2
-		printf("petit satellite de %f tonne\n", payload);
+		printf("petit satellite de %.2f tonne\n", payload);
 	else if(payload==capsule)
-		printf("capsule de %f tonnes\n", payload);//MK3 capsule + heatshield + parachute
+		printf("capsule de %.2f tonnes\n", payload);//MK3 capsule + heatshield + parachute
 	else if(payload==reservoir)
-		printf("grand réservoir de %f tonnes\n", payload);//Rockomax Jumbo-64 Fuel Tank
+		printf("grand réservoir de %.2f tonnes\n", payload);//Rockomax Jumbo-64 Fuel Tank
 	else
-		printf("chargement custom de %f tonnes\n", payload);
+		printf("chargement custom de %.2f tonnes\n", payload);
 
 	printf("Choix du chargement\n1) petit satellite\n2) capsule\n3) grand réservoir\n4) custom\n:");
 	int rep=scanint();
@@ -130,11 +130,10 @@ void fusee(){
 	}
 }
 
-void score(){
-	printf("Importance du:\n1) deltaV\n2) coût\n3) TWR\n:");
+void menudv(){
+	printf("1) Importance\n2) Minimum\n3) Maximum\n:");
 	int rep=scanint();
 	system("clear");
-
 	switch (rep){
 		case 1:
 			printf("Actuel: %f\n",moddeltav);
@@ -143,15 +142,94 @@ void score(){
 			break;
 
 		case 2:
+			printf("Actuel: %d\n",mindv);
+			printf("Entrez un nombre\n:");
+			mindv=scanint();
+			break;
+
+		case 3:
+			printf("Actuel: %d\n",maxdv);
+			printf("Entrez un nombre\n:");
+			mindv=scanint();
+			break;
+
+		default:
+			break;
+	}
+}
+
+void menucost(){
+	printf("1) Importance\n2) Minimum\n3) Maximum\n:");
+	int rep=scanint();
+	system("clear");
+	switch (rep){
+		case 1:
 			printf("Actuel: %f\n",modcost);
 			printf("Entrez un nombre entre 0 et 3\n:");
 			modcost=scanfloat();
 			break;
 
+		case 2:
+			printf("Actuel: %d\n",mincost);
+			printf("Entrez un nombre\n:");
+			mincost=scanint();
+			break;
+
 		case 3:
+			printf("Actuel: %d\n",maxcost);
+			printf("Entrez un nombre\n:");
+			mincost=scanint();
+			break;
+
+		default:
+			break;
+	}
+}
+
+void menutwr(){
+	printf("1) Importance\n2) Minimum\n3) Maximum\n:");
+	int rep=scanint();
+	system("clear");
+	switch (rep){
+		case 1:
 			printf("Actuel: %f\n",modtwr);
 			printf("Entrez un nombre entre 0 et 3\n:");
 			modtwr=scanfloat();
+			break;
+
+		case 2:
+			printf("Actuel: %f\n",minusertwr);
+			printf("Entrez un nombre\n:");
+			minusertwr=scanfloat();
+			break;
+
+		case 3:
+			printf("Actuel: %f\n",maxusertwr);
+			printf("Entrez un nombre\n:");
+			minusertwr=scanfloat();
+			break;
+
+		default:
+			break;
+	}
+}
+
+void score(){
+	printf("1) deltaV\n2) coût\n3) TWR\n:");
+	int rep=scanint();
+	system("clear");
+
+	switch (rep){
+		case 1:
+			menudv();
+			break;
+
+		case 2:
+			menucost();
+			break;
+
+		case 3:
+			menutwr();
 			break;
 
 		default:
