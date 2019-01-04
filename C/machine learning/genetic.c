@@ -95,7 +95,7 @@ void reproduire(gene** genespop, stage** pop, int usercontinue){
 	
 	//affichage de la meilleure fusée de la dernière génération
 	if(!usercontinue)
-		afficherfusee(pop[ (int)scores[nbpop-1][0] ]);
+		afficherfuseehtml(pop[ (int)scores[nbpop-1][0] ]);
 
 	//on tue nbpop*ratiokill de la population
 	int nbtue=(int)(nbpop*ratiokill);

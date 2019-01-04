@@ -46,3 +46,4 @@ void afficherstage(stage* s);
 void afficherfusee(stage* s);
 void afficherlistft(fueltank* listft, int l);
 void afficherlisteng(engine* listeng, int l);
+void afficherfuseehtml(stage* s);

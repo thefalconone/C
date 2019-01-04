@@ -1,13 +1,11 @@
 #include "secondary.h"
 
 extern int nbmaxft;
-extern float moddeltav, modcost, modtwr;
+extern float moddeltav, modcost, modtwr, payload;
 
 stage* initialisefusee(){
 	stage* s=malloc(sizeof(*s));
-	s->drymass= 0.02*2 + 0.01 + 0.04;//2 solar panels + 1 battery bank + 1 probodobodyne OKTO2
-	//s->drymass=2.72 + 1.3 + 0.3;//MK3 capsule + heatshield + parachute
-	//s->drymass=36;//Rockomax Jumbo-64 Fuel Tank
+	s->drymass=payload;
 	s->totalmass=s->drymass;
 	s->ft=NULL;
 	s->under=NULL;

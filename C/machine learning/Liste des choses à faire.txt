@@ -1,3 +1,0 @@
-﻿Liste des choses à faire:
-
-interface des mods et affichage de la fusée en html

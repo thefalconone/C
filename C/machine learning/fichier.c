@@ -20,9 +20,9 @@ engine* lire_eng(FILE* engines){
 	for(int i=0; i<nbeng; i++){
 		//name
 		fgets(ligne, taillemax, engines);
-		listeng[i].name=malloc(sizeof(char)*strlen(ligne));
-		//elimination de " "
-		strcpynb(listeng[i].name,ligne,1);
+		ligne[strlen(ligne)-1]='\0';
+		listeng[i].name=malloc(sizeof(char)*strlen(ligne) + 1);//+1 pour le \0
+		strcpy(listeng[i].name,ligne);
 
 		//cost
 		fgets(ligne, taillemax, engines);
@@ -92,11 +92,10 @@ fueltank* lire_ft(FILE* fueltanks){
 	fueltank* listft=malloc(sizeof(struct fueltank)*nbft);
 
 	for(int i=0; i<nbft; i++){
-		//name
 		fgets(ligne, taillemax, fueltanks);
-		listft[i].name=malloc(sizeof(char)*strlen(ligne));
-		//elimination de " "
-		strcpynb(listft[i].name,ligne,1);
+		ligne[strlen(ligne)-1]='\0';
+		listft[i].name=malloc(sizeof(char)*strlen(ligne) + 1);//+1 pour le \0
+		strcpy(listft[i].name,ligne);
 
 		//cost
 		fgets(ligne, taillemax, fueltanks);
