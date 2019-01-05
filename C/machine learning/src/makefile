@@ -1,5 +1,6 @@
 all: main.o fichier.o fusee.o genetic.o affichage.o memgenetic.o
 	gcc -o main main.o fichier.o fusee.o genetic.o affichage.o memgenetic.o -Wall
+	mv main ..
 
 main.o: main.c main.h
 	gcc -c main.c -o main.o -Wall

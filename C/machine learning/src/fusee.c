@@ -179,21 +179,21 @@ float scorefusee(stage* s){
 
 	if(dv){
 		if(dv<mindv)
-			score *= dv/mindv;
+			score *= 0.1*dv/mindv;
 		if(maxdv!=-1 && dv>maxdv)//on a dépassé le max
-			score *= maxdv/dv;
+			score *= 0.1*maxdv/dv;
 	}
 
 	float maxftwr=maxfuseetwr(s);
 	if(minftwr!=0 && minftwr<minusertwr)
-		score *= minftwr/minusertwr;
+		score *= 0.1*minftwr/minusertwr;
 	if(maxftwr!=0 && maxusertwr!=-1 && maxftwr>maxusertwr)
-		score *= maxusertwr/maxftwr;
+		score *= 0.1*maxusertwr/maxftwr;
 
 	if(cost<mincost)
-		score *= cost/mincost;
+		score *= 0.1*cost/mincost;
 	if(maxcost!=-1 && cost>maxcost)
-		score *= maxcost/cost;
+		score *= 0.1*maxcost/cost;
 
 	return score;
 }

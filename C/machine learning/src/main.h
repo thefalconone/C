@@ -34,6 +34,8 @@ float maxfuseetwr(stage* s);
 //fichier.c
 fueltank* lirefttxt();
 engine* lireengtxt();
+void readsettings();
+void savesettings();
 
 //genetic.c
 void genetic(fueltank* listft, engine* listeng);

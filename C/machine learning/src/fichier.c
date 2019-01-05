@@ -1,5 +1,8 @@
 #include "secondary.h"
 
+extern float ratiokill, moddeltav, modcost, modtwr, minusertwr, maxusertwr, payload;
+extern int nbpop, nbmut, nbmaxft, nbmaxstages, nbgen, mindv, maxdv, mincost, maxcost;
+
 void strcpynb(char* coller, char* copier, int nb){
 	int i=nb;
 	while(copier[i]!='\n'){
@@ -150,7 +153,7 @@ fueltank* lire_ft(FILE* fueltanks){
 
 fueltank* lirefttxt(){
 	FILE* fueltanks;
-	fueltanks=fopen("fueltank.txt","r");
+	fueltanks=fopen("data/fueltank.txt","r");
 	fueltank* listft;
 
 	//si le fichier s'ouvre correctement
@@ -159,7 +162,7 @@ fueltank* lirefttxt(){
 	}
 	else{
 		printf("fueltank.txt n'existe pas, création des fichiers...\n");
-		int errft=system("sh createfueltank.sh");
+		int errft=system("cd ../data; sh createfueltank.sh");
 		if(errft==-1){ printf("Erreur sur le script createfueltank.sh\n"); }
 		else{ printf("Succès, veuillez relancer le programme\n");}
 		listft=NULL;
@@ -170,7 +173,7 @@ fueltank* lirefttxt(){
 
 engine* lireengtxt(){
 	FILE* engines;
-	engines=fopen("engine.txt","r");
+	engines=fopen("data/engine.txt","r");
 	engine* listeng;
 
 	//si le fichier s'ouvre correctement
@@ -179,11 +182,72 @@ engine* lireengtxt(){
 	}
 	else{
 		printf("engine.txt n'existe pas, création des fichiers...\n");
-		int erreng=system("sh createengine.sh");
+		int erreng=system("cd ../data; sh createengine.sh");
 		if(erreng==-1){ printf("Erreur sur le script createengine.sh\n"); }
 		else{ printf("Succès, veuillez relancer le programme\n");}
 		listeng=NULL;
 	}
 	fclose(engines);
 	return listeng;
+}
+
+void overwritesettings(){
+	FILE* settings;
+	settings=fopen("data/settings.txt","w");
+
+	fprintf(settings, "0.5\n1\n1\n1\n1\n5\n4.32\n1000\n300\n3\n5\n100\n0\n-1\n0\n-1\n");
+}
+
+void readsettings(){
+	FILE* settings;
+	settings=fopen("data/settings.txt","r");
+
+	if(settings!=NULL){//si le fichier existe
+		int taillemax=50;
+		char ligne[taillemax];
+
+		fgets(ligne,taillemax,settings);
+		ratiokill=atof(ligne);
+		fgets(ligne,taillemax,settings);
+		moddeltav=atof(ligne);
+		fgets(ligne,taillemax,settings);
+		modcost=atof(ligne);
+		fgets(ligne,taillemax,settings);
+		modtwr=atof(ligne);
+		fgets(ligne,taillemax,settings);
+		minusertwr=atof(ligne);
+		fgets(ligne,taillemax,settings);
+		maxusertwr=atof(ligne);
+		fgets(ligne,taillemax,settings);
+		payload=atof(ligne);
+		fgets(ligne,taillemax,settings);
+		nbpop=atoi(ligne);
+		fgets(ligne,taillemax,settings);
+		nbmut=atoi(ligne);
+		fgets(ligne,taillemax,settings);
+		nbmaxft=atoi(ligne);
+		fgets(ligne,taillemax,settings);
+		nbmaxstages=atoi(ligne);
+		fgets(ligne,taillemax,settings);
+		nbgen=atoi(ligne);
+		fgets(ligne,taillemax,settings);
+		mindv=atoi(ligne);
+		fgets(ligne,taillemax,settings);
+		maxdv=atoi(ligne);
+		fgets(ligne,taillemax,settings);
+		mincost=atoi(ligne);
+		fgets(ligne,taillemax,settings);
+		maxcost=atoi(ligne);
+	}
+	else{
+		printf("Le fichier settings n'existe pas, reconstruction\n");
+		overwritesettings();
+	}
+}
+
+void savesettings(){
+	FILE* settings;
+	settings=fopen("data/settings.txt","w");
+
+	fprintf(settings, "%f\n%f\n%f\n%f\n%f\n%f\n%f\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n", ratiokill, moddeltav, modcost, modtwr, minusertwr, maxusertwr, payload, nbpop, nbmut, nbmaxft, nbmaxstages, nbgen, mindv, maxdv, mincost, maxcost);
 }
