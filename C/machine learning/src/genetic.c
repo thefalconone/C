@@ -1,4 +1,9 @@
-#include "secondary.h"
+#include "../inc/fusee.h"
+#include "../inc/memgenetic.h"
+#include "../inc/affichage.h"
+#include "../inc/genetic.h"
+#include <stdlib.h>
+#include <time.h>
 
 extern int nbpop, nbmut, nbgen, nbmaxft, nbmaxstages;
 extern float ratiokill;

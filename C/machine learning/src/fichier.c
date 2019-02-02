@@ -1,8 +1,12 @@
-#include "secondary.h"
+#include "../inc/fichier.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 extern float ratiokill, moddeltav, modcost, modtwr, minusertwr, maxusertwr, payload;
 extern int nbpop, nbmut, nbmaxft, nbmaxstages, nbgen, mindv, maxdv, mincost, maxcost;
 
+//supprime les nb premier char de la variable char* copier et les mets dans le char* coller
 void strcpynb(char* coller, char* copier, int nb){
 	int i=nb;
 	while(copier[i]!='\n'){

@@ -1,4 +1,7 @@
-#include "main.h"
+#include "../inc/fusee.h"
+#include "../inc/affichage.h"
+#include <stdlib.h>
+#include <stdio.h>
 
 extern int nbpop;
 extern float payload;

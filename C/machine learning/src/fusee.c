@@ -1,4 +1,6 @@
-#include "secondary.h"
+#include "../inc/fusee.h"
+#include <stdlib.h>
+#include <math.h>
 
 extern int nbmaxft, mindv, maxdv, mincost, maxcost;
 extern float moddeltav, modcost, modtwr, payload, minusertwr, maxusertwr;
