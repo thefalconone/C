@@ -69,7 +69,7 @@ int* appareillage(int nb){
 	return appareilles;
 }
 
-//renvoie un tableau de nbpop-nbtokill avecles meilleurs indices qui ont une meilleure chance de survie
+//renvoie un tableau de nbpop-nbtokill. Les meilleurs indices ont une meilleure chance de survivre
 int* tue(float** scores, int nbtokill){
 	int* vivants=malloc( sizeof(*vivants)*(nbpop-nbtokill) );
 	int nbtues=0;
@@ -92,22 +92,24 @@ int* tue(float** scores, int nbtokill){
 	return vivants;
 }
 
-void reproduire(gene** genespop, stage** pop, int usercontinue){
-	//si usercontinue=0, c'est la dernière generation
+//fait avancer la population d'une génération
+//affiche la meilleure fusée quand le compteur atteint 0
+void reproduire(gene** genespop, stage** pop, int compteur){
+	//si compteur=0, c'est la dernière generation
 
 	//SELECTION
 	float** scores=remplirscorestries(pop);
 	
 	//affichage de la meilleure fusée de la dernière génération
-	if(!usercontinue)
-		afficherfuseehtml(pop[ (int)scores[nbpop-1][0] ]);
+	if(!compteur)
+		creerfuseehtml(pop[ (int)scores[nbpop-1][0] ]);
 
 	//on tue nbpop*ratiokill de la population
 	int nbtue=(int)(nbpop*ratiokill);
 	int nbvivants=nbpop-nbtue;
 	int* vivants=tue(scores, nbtue);
 	freescores(scores);
-	//dorenavant in travaille sur les fusées d'indice vivants[xx];
+	//dorenavant in travaille sur les fusées d'indice vivants[x];
 
 	//MUTATION
 	for(int i=0; i<nbmut; i++){//seul nbmut fusées mutent
@@ -130,9 +132,9 @@ void reproduire(gene** genespop, stage** pop, int usercontinue){
 	}
 
 	//CROSS-OVER
+
 	gene** newgenespop=initialisepopgenes();
 
-	//printf("nbvivants=%d nbtue=%d\n",nbvivants,nbtue);
 	int nbenfants=0;
 	while(nbenfants<nbpop-1){
 
@@ -140,7 +142,6 @@ void reproduire(gene** genespop, stage** pop, int usercontinue){
 		int* appareilles=appareillage(nbvivants);
 
 		for(int i=0; i<nbvivants && nbenfants<nbpop; i++){
-			//printf("%d\n",nbenfants);
 
 			for(int j=0; j<nbmaxstages; j++){
 				//on prends un génome du père ou de la mère au hasard
@@ -155,7 +156,10 @@ void reproduire(gene** genespop, stage** pop, int usercontinue){
 		free(appareilles);
 	}
 
+	//on écrase l'ancienne génération avec la nouvelle
 	recopiegene(genespop,newgenespop);
+
+	//on free ce qu'on a crée
 	free(vivants);
 	freepopgenes(newgenespop);
 }
@@ -164,17 +168,17 @@ void genetic(fueltank* listft, engine* listeng){
 
 	gene** genespop=initialisepopgenes();
 
-	int usercontinue=nbgen;//nb de genrations à calculer avant d'afficher le resultat
-	while(usercontinue!=0){//pour avancer d'une génération à la fois
-		usercontinue--;
+	int compteur=nbgen;//nb de genrations à calculer avant d'afficher le resultat
+	while(compteur>0){
+		compteur--;
 
-		//construire la nouvelle génération et reset la precedente
+		//construction la nouvelle génération
 		stage** pop=initialisepopfusee();
 		construire(listft, listeng, pop, genespop);
 
 		//evaluer la génération et la faire reproduire
 		//les meilleurs partagent leurs gènes par bloc de stage
-		reproduire(genespop, pop, usercontinue);
+		reproduire(genespop, pop, compteur);
 		freepopfusee(pop);
 	}
 }

@@ -36,7 +36,7 @@ void quicksort(float** number,int first,int last){
 }
 
 //il y a 41 fuel tanks et 24 engines
-//rempli le génome de gènes random
+//rempli le génome avec des gènes random
 genestage* initialisegenestage(){
 	genestage* s=malloc(sizeof(*s));
 

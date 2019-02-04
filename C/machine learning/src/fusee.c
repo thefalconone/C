@@ -116,6 +116,8 @@ void addstage(stage* s, int* indiceft, fueltank* listft, engine e){
 			nbft++;
 		}
 	}
+
+	//affectation de divers paramètres
 	under->e=e;
 	under->under=NULL;
 	under->totalmass=s->totalmass+stagetotalmass(under);
@@ -125,8 +127,11 @@ void addstage(stage* s, int* indiceft, fueltank* listft, engine e){
 
 float deltav(stage* s){//s=toute le fusee
 	float deltav=0;
-	if(s->under!=NULL){//au cas ou la fusee soit vide
-		s=s->under;//pour eviter le command pod
+
+	//au cas ou la fusee soit vide
+	if(s->under!=NULL){
+		//pour eviter le premier étage c'est à dire le payload
+		s=s->under;
 		deltav= log(s->totalmass/s->drymass) * s->e.isp * 9.81;
 		while(s->under!=NULL){
 			s=s->under;
@@ -145,6 +150,7 @@ int costfusee(stage* s){
 	return rep;
 }
 
+//calcul du twr minimum sur tous les étages d'une fusée
 float minfuseetwr(stage* s){
 	float rep=10000;
 	while(s->under!=NULL){
@@ -158,6 +164,7 @@ float minfuseetwr(stage* s){
 	return rep;
 }
 
+//calcul du twr maximum sur tous les étages d'une fusée
 float maxfuseetwr(stage* s){
 	float rep=0;
 	while(s->under!=NULL){

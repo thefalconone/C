@@ -15,6 +15,7 @@ void strcpynb(char* coller, char* copier, int nb){
 	}
 }
 
+//le fichier récupéré est forcément valide, on peut remplir la liste des engines
 engine* lire_eng(FILE* engines){
 	int taillemax=100;
 	char ligne[taillemax];
@@ -89,6 +90,7 @@ engine* lire_eng(FILE* engines){
 	return listeng;
 }
 
+//le fichier récupéré est forcément valide, on peut remplir la liste des fueltanks
 fueltank* lire_ft(FILE* fueltanks){
 	int taillemax=50;
 	char ligne[taillemax];
@@ -155,26 +157,7 @@ fueltank* lire_ft(FILE* fueltanks){
 	return listft;
 }
 
-fueltank* lirefttxt(){
-	FILE* fueltanks;
-	fueltanks=fopen("data/fueltank.txt","r");
-	fueltank* listft;
-
-	//si le fichier s'ouvre correctement
-	if (fueltanks!=NULL){
-		listft=lire_ft(fueltanks);
-	}
-	else{
-		printf("fueltank.txt n'existe pas, création des fichiers...\n");
-		int errft=system("cd ../data; sh createfueltank.sh");
-		if(errft==-1){ printf("Erreur sur le script createfueltank.sh\n"); }
-		else{ printf("Succès, veuillez relancer le programme\n");}
-		listft=NULL;
-	}
-	fclose(fueltanks);
-	return listft;
-}
-
+//gère les problèmes de fichier pour les engines
 engine* lireengtxt(){
 	FILE* engines;
 	engines=fopen("data/engine.txt","r");
@@ -195,6 +178,30 @@ engine* lireengtxt(){
 	return listeng;
 }
 
+//gère les problèmes de fichier pour les fueltanks
+fueltank* lirefttxt(){
+	FILE* fueltanks;
+	fueltanks=fopen("data/fueltank.txt","r");
+	fueltank* listft;
+
+	//si le fichier s'ouvre correctement
+	if (fueltanks!=NULL){
+		listft=lire_ft(fueltanks);
+	}
+	else{
+		printf("fueltank.txt n'existe pas, création des fichiers...\n");
+		int errft=system("cd ../data; sh createfueltank.sh");
+		if(errft==-1){ printf("Erreur sur le script createfueltank.sh\n"); }
+		else{ printf("Succès, veuillez relancer le programme\n");}
+		listft=NULL;
+	}
+	fclose(fueltanks);
+	return listft;
+}
+
+//----------------------settings/variables globales----------------------------
+
+//création d'un fichier settings.txt si il n'existe pas
 void overwritesettings(){
 	FILE* settings;
 	settings=fopen("data/settings.txt","w");
@@ -202,6 +209,7 @@ void overwritesettings(){
 	fprintf(settings, "0.5\n1\n1\n1\n1\n5\n4.32\n1000\n300\n3\n5\n100\n0\n-1\n0\n-1\n");
 }
 
+//lecture de data/settings.txt et affectation des variables globales
 void readsettings(){
 	FILE* settings;
 	settings=fopen("data/settings.txt","r");
@@ -249,6 +257,7 @@ void readsettings(){
 	}
 }
 
+//sauvegarde des variables globales dans data/settings.txt
 void savesettings(){
 	FILE* settings;
 	settings=fopen("data/settings.txt","w");
