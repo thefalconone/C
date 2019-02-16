@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<meta charset="utf-8">
+<link rel="stylesheet" type="text/css" href="../Headercss/Header.css">
+<link rel="stylesheet" href="Diapo/css/style.css">
+<link rel="stylesheet" type="text/css" href="Text/styles.css">
+<link rel="stylesheet" type="text/css" href="../Footercss/Footer.css">
+<script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+<script  src="Diapo/js/index.js"></script>
+<head>
+	<title>Accueil</title>
+</head>
+<body>
+
+<!--****************************************************************-->
+	<div class="header">
+	    <div class="logo">
+	        <img src="../Headercss/Logo_INSA.png"/>
+	    </div>
+
+	    <div class="blockheader">
+	        <div class="Top">
+	            <div class="TopLeft"></div>
+	            <div class="TopRight">
+			            <a class="social-btn" href="https://fr-fr.facebook.com/INSAToulouse"><img class="fa fa-facebook" src="../Headercss/facebook.png"></a>
+			            <a class="social-btn" href="https://www.youtube.com/user/InsaToulouse"><img class="fa fa-youtube" src="../Headercss/youtube.png"></a>
+			            <a class="social-btn" href="https://www.instagram.com/insatoulouse"><img class="fa fa-instagram" src="../Headercss/instagram.png"></a>
+	           </div>
+	    	</div>
+				
+	    </div>
+	    <div class="navbar">
+	            <nav>
+								<label for="menu-mobile" class="menu-mobile">Menu</label>
+								<input type="checkbox" id="menu-mobile" role="button">
+								<ul>
+									<li class="menu_html"><a href="Accueil.html">Accueil</a>
+									<li class="menu_html"><a href="../Liste_Universite/Universite.html">Universités</a>
+									<li class="menu_html"><a href="../Carte/WordMap.html">Planisphère</a>
+									<li class="menu_html"><a href="../Contact/Contact.html">Contact</a>
+								</ul>
+	            </nav>
+		</div>
+		<div style="height: 20px;"></div>
+	</div> 
+
+<!--****************************************************************-->
+	<div class=Diapo>
+	  <div class="test">
+	    <a href="#" class="arrowL">&#8249;</a>
+	    <div id="slideshow">
+	      <div><img src="Diapo/A.png"/></div>
+	      <div class="hidden"><img src="Diapo/B.jpg"/></div>
+	      <div class="hidden"><img src="Diapo/C.jpg"/></div>
+	    </div>
+	    <a href="#" class="arrowR">&#8250;</a>
+	    <a class="bouton" onclick="changeImage()"><img id="photo" src="Diapo/pause.png"></a>
+	  </div>
+	</div>
+<!--****************************************************************-->
+<div class="text">
+		<div id="Gauche">
+			<h3>RÉUSSIR SES ÉTUDES À L'ÉTRANGER</h3>
+			<p>Pendant vos études, c’est certain, vous ferez un passage par l’étranger ! Dans quel(s) pays ? Pour quelle durée ? Avec quel budget ? Nos conseils pour un choix stratégique et profiter à fond de l’expérience</p>
+			<p>Si vous avez l’opportunité ou l’envie de partir étudier à l’étranger, saisissez cette chance ! Les avantages sont nombreux, tant pour votre CV que pour votre culture personnelle.</p>
+			<p>Pour autant, un séjour d’études à l’étranger ne s’improvise pas. Formalités administratives, choix du pays et du cursus, financement, vie sur place : de nombreux paramètres sont à anticiper, plusieurs mois avant le départ.</p>
+		</div>
+		<div id="Droite">
+			<h4>Postuler à une université à l'étranger</h5>
+			<p>Quelque soit le pays, la plupart des universités demandent quasi-systèmatiquement les mêmes documents pour vos inscriptions, que cela soit en ligne ou par dossier écrit. Voici donc une liste avec description des documents principaux pour étudier à l'étranger.</p>
+
+			<h4>Réaliser un dossier en ligne pour étudier à l'étranger</h4>
+			<p>De plus en plus d'universités proposent aux étudiants étrangers de s'inscrire en ligne via leur site, ou via un système d'inscription généralisé. Attention cependant aux erreurs courrantes liées à ce type d'inscription.</p>
+
+			<h4>Pourquoi partir étudier à l'étranger ?</h4>
+			<p>Quelles sont les raisons qui peuvent vous pousser à partir étudier à l'étranger ? Des apports personnelsaux apports professionnels, les avantages à étudier à l'étranger vous sont présentés de manière détaillée.</p>
+
+			<h4>Quand partir étudier à l'étranger ?</h4>
+			<p>A quelle moment partir étudier à l'étranger ? A quel niveau de diplôme ? Les différentes possibilités selon votre niveau de diplôme vous sont présentées, ainsi que vos possibilités selon votre parcours étudiant.</p>
+
+			<h4>Les programmes pour étudier à l'étranger</h4>
+			<p>Les programmes d'échanges permettent de vous faciliter les démarches pour étudier à l'étranger et vous apportent souvent une aide financière. Si Erasmus et Leonardo sont les plus connus, il existent d'autres programmes d'échanges internationaux.</p>
+		</div>
+	</div>
+<!--****************************************************************-->
+<footer class="Footer">
+
+			<div class="left">
+
+				 <a href="#"><img class="LogoInsa" src="../Footercss/Logo_INSA.png"></a>
+
+				<p class="links">
+					<a href="#">Accueil</a>
+					·
+					<a href="#">Universités</a>
+					·
+					<a href="#">Planisphère</a>
+					·
+					<a href="#">Contact</a>
+				</p>
+
+				<p class="company-name">Insa MIC &copy; 2018</p>
+			</div>
+
+			<div class="center">
+
+				<div>
+					<p><img class="fas" src="../Footercss/mapmarker.png"></p>
+					<p><span>135 Avenue de Rangueil</span> Toulouse, France</p>
+				</div>
+
+				<div>
+					<p><img class="fas" src="../Footercss/phone.png"></p>
+					<p>+33 05 61 55 95 13</p>
+				</div>
+
+				<div>
+					<p><img class="fas" src="../Footercss/enveloppe.png"></p>
+					<p><a href="mailto:support@company.com">Insa@gmail.com</a></p>
+				</div>
+
+			</div>
+
+			<div class="right">
+
+				<p class="company-about">
+					<span>À propos</span>
+					Départs à l'étranger INSA
+				</p>
+
+				<div class="icons">
+
+					<a href="#"><img class="faSociaux" src="../Footercss/facebook.png"></a>
+					<a href="#"><img class="faSociaux" src="../Footercss/instagram.png"></a>
+					<a href="#"><img class="faSociaux" src="../Footercss/youtube.png"></a>
+
+				</div>
+
+			</div>
+
+		</footer>
+<!--****************************************************************-->
+</body>
+</html>

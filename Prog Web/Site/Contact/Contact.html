@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+
+<html>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="stylesContact.css">
+	<link rel="stylesheet" type="text/css" href="../Headercss/Header.css">
+	<link rel="stylesheet" type="text/css" href="../Footercss/Footer.css">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<head>
+	<title>Contact</title>
+	</head>
+
+	<body>
+
+<!--****************************************************************-->
+	<div class="header">
+	    <div class="logo">
+	        <img src="../Headercss/Logo_INSA.png"/>
+	    </div>
+
+	    <div class="blockheader">
+	        <div class="Top">
+	            <div class="TopLeft"></div>
+	            <div class="TopRight">
+			            <a class="social-btn" href="https://fr-fr.facebook.com/INSAToulouse"><img class="fa fa-facebook" src="../Headercss/facebook.png"></a>
+			            <a class="social-btn" href="https://www.youtube.com/user/InsaToulouse"><img class="fa fa-youtube" src="../Headercss/youtube.png"></a>
+			            <a class="social-btn" href="https://www.instagram.com/insatoulouse"><img class="fa fa-instagram" src="../Headercss/instagram.png"></a>
+	           </div>
+	    	</div>
+				
+	    </div>
+	    <div class="navbar">
+	            <nav>
+								<label for="menu-mobile" class="menu-mobile">Menu</label>
+								<input type="checkbox" id="menu-mobile" role="button">
+								<ul>
+									<li class="menu_html"><a href="../Accueil/Accueil.html">Accueil</a>
+									<li class="menu_html"><a href="../Liste_Universite/Universite.html">Universités</a>
+									<li class="menu_html"><a href="../Carte/WordMap.html">Planisphère</a>
+									<li class="menu_html"><a href="Contact.html">Contact</a>
+								</ul>
+	            </nav>
+		</div>
+		<div style="height: 20px;"></div>
+	</div> 
+
+<!--****************************************************************-->
+		<div class="Laform">
+			<h1>Contactez nous</h1>
+			<div class="border"></div>
+				<form class="contact-form" action="indexMainUniversités.html" method="post">
+			          <input type="text" class="contact-form-text" placeholder="Votre nom" required>
+			          <input type="text" class="contact-form-text" placeholder="Votre prénom" required>
+			          <input type="email" class="contact-form-text" placeholder="Votre adresse mail" required>
+			          <input list="Filière" type="text" class="contact-form-text" placeholder="Votre fillière" required>
+			            <datalist id="Filière">
+			              <option value="IR">
+			              <option value="GMM">
+			              <option value="GC">
+			              <option value="AE">
+			            </datalist>
+				        <textarea class="contact-form-text" placeholder="Votre message" required></textarea>
+			        	<input type="submit" class="contact-form-btn" value="Envoyer">
+		    	</form>
+		</div>
+
+<!--****************************************************************-->
+<footer class="Footer">
+
+			<div class="left">
+
+				 <a href="#"><img class="LogoInsa" src="../Footercss/Logo_INSA.png"></a>
+
+				<p class="links">
+					<a href="#">Accueil</a>
+					·
+					<a href="#">Universités</a>
+					·
+					<a href="#">Planisphère</a>
+					·
+					<a href="#">Contact</a>
+				</p>
+
+				<p class="company-name">Arrondelle &copy; 2018</p>
+			</div>
+
+			<div class="center">
+
+				<div>
+					<p><img class="fas" src="../Footercss/mapmarker.png"></p>
+					<p><span>135 Avenue de Rangueil</span> Toulouse, France</p>
+				</div>
+
+				<div>
+					<p><img class="fas" src="../Footercss/phone.png"></p>
+					<p>+33 05 61 55 95 13</p>
+				</div>
+
+				<div>
+					<p><img class="fas" src="../Footercss/enveloppe.png"></p>
+					<p><a href="mailto:support@company.com">hugo.arrondelle@gmail.com</a></p>
+				</div>
+
+			</div>
+
+			<div class="right">
+
+				<p class="company-about">
+					<span>À propos</span>
+					Ceci est mon site web, je présente pleins d'universités. Bisous.
+				</p>
+
+				<div class="icons">
+
+					<a href="#"><img class="faSociaux" src="../Footercss/facebook.png"></a>
+					<a href="#"><img class="faSociaux" src="../Footercss/instagram.png"></a>
+					<a href="#"><img class="faSociaux" src="../Footercss/youtube.png"></a>
+
+				</div>
+
+			</div>
+
+		</footer>
+<!--****************************************************************-->
+
+	</body>
+	
+
+
+</html>

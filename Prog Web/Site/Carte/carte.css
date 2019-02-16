@@ -1,0 +1,78 @@
+
+			.land
+			{
+				fill: #AAAAAA;
+				fill-opacity: 1;
+				stroke:white;
+				stroke-opacity: 1;
+				stroke-width:0.5;
+			}
+			.land3{
+				fill: #000000;
+				fill-opacity: 1;
+				stroke:white;
+				stroke-opacity: 1;
+				stroke-width:0.5;
+			}
+			.land2{
+				fill: #FF9999;
+				fill-opacity: 1;
+				stroke:white;
+				stroke-opacity: 1;
+				stroke-width:0.5;
+			}
+			.land:hover
+			{
+				fill: #757575;
+			}
+			.land2:hover
+			{
+				fill: #FF0000;
+				fill-opacity: 1;
+				stroke:white;
+				stroke-opacity: 1;
+				stroke-width:0.5;
+			}
+			.ul
+			{
+				margin-top: 150px;
+				float:left;
+
+				box-shadow: 3px 3px 3px 0 #34495e;
+    			border: 1px solid #34495e;
+
+				padding-left: 2em;
+				background-color: white;
+				opacity: 1;
+				width: 90%;
+				display:none;
+			}
+			.ul#NULL
+			{
+				border-width: 0;
+				border-radius: 2%;
+			}
+			div#map{
+				margin-top: 30px;
+				width: 70%;
+				float: left;
+			}
+			div#texts {
+				float: left;
+			}
+
+
+@media only screen and (max-width: 60em) {
+    .ul{
+    	clear: both;
+    	margin-left: 60px;
+    	margin-bottom: 20px;
+    	margin-top: 20px;
+    	
+    }
+    div#map{
+				margin-top: 30px;
+				width: 100%;
+				float: left;
+			}
+}

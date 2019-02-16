@@ -1,0 +1,234 @@
+html{
+	font-family: arial;
+}
+/*BODY*/
+body{
+	margin: 0;
+	padding: 0;
+}
+
+
+#mainImg{
+  max-width: 25em;
+  float:left;
+}
+#Cartemonde
+{
+  /*margin:1em;*/
+  display: block;
+  margin-right: auto;
+  margin-left: auto;
+  margin-top: -15px;
+  width: 13em;
+  z-index: 0;
+}
+
+#boxLeft
+{
+  margin-top: 3%;
+
+    text-align: left;
+    float:left;
+    width: 15em;
+    height: auto;
+    background-color: white;
+    box-shadow: 5px 5px 10px 0 #34495e;
+    margin-left: 5%;
+    clear: both;
+}
+
+section#all
+{
+  box-shadow: 5px 5px 5px 5px #34495e;
+  margin-top: 3%;
+  margin-bottom: 2%;
+  width: 65%;
+  float: left;
+  margin-left: 5%;
+}
+
+div#mainRight
+{
+  float: left;
+  
+  /*width: 100%;*/
+  
+}
+aside#AttributAside
+{
+  margin-left: 5%;
+  float: left;
+}
+div#mainBottom
+{
+  padding-top: 0.1em;
+  margin-right: 2%;
+  margin-left: 2%;
+  clear:both;
+  
+}
+
+#boxLeft p {
+  margin-left: 1em;
+  margin-bottom: 1em;
+
+}
+
+#TitleAttribut{
+  color: red;
+  text-align: center;
+}
+
+#TitleAttribut_bis{
+  color: red;
+  text-align: center;
+}
+
+
+
+
+
+
+
+.row{
+  margin-left: 2%;
+  margin-top: 2%;
+  /*background-color:#0000ff;*/
+  width:7%;
+  float: left;
+  max-height: 308px;
+  
+  min-height: 204px;
+  min-width: 65px;
+}
+.column {
+    /*width: 25%;*/
+    padding: 5px;
+}
+
+/* Style the images inside the grid */
+.column img {
+    opacity: 0.8; 
+    cursor: pointer; 
+    min-height: 36px;
+    min-width: 55px;
+}
+
+.column img:hover {
+    opacity: 1;
+}
+
+/* Clear floats after the columns */
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+   
+
+}
+
+/* The expanding image container */
+.container {
+    position: relative;
+    display: block;
+    float: left;
+   /* background-color: red;*/
+    /*height: 428px;*/
+    margin-top: 2%;
+    margin-left: 1%;
+    width: 30%; 
+   
+
+}
+
+.container img{
+
+    /*max-width:642px;*/
+    display: block;
+    margin-left: auto;
+    margin-right: auto
+}
+
+/* Expanding image text */
+#imgtext {
+    position: absolute;
+    bottom: 15px;
+    left: 25px;
+    color: white;
+    font-size: 20px;
+}
+
+
+
+#expandedImg{
+  max-height: 200px;
+  min-width: 300px;
+
+  
+}
+
+
+
+/*MOBILE*/
+@media screen and (max-width: 65em) {
+  
+  /*MOBILE BODY*/
+  section#all
+  {
+    width: 80%;
+    /*float: left;*/
+    border:solid;
+    border-width: 1%;
+    border-color: silver;
+    border-radius: 1em;
+    margin-left: 10%;
+    
+    
+    margin-top: 1em;
+    margin-bottom: 1em;
+  }
+  nav#boxLeft
+  {
+    text-align: left;
+    /*float:left;*/
+    width: 80%;
+    height: auto;
+    border: solid;
+    border-color: silver;
+    border-width: 1%;
+    border-radius: 1em;
+    /*padding-left: 20%;*/
+    margin-left: 10%;
+    
+  }
+  #boxLeft p {
+  margin-left: 2em;
+}
+  #mainImg{
+    max-width: 90%;
+    margin: 1em;
+  }
+  #Cartemonde
+  {
+    margin-top:1em;
+    width: 16em;
+   
+  }
+  #boxLeft img{
+    position: relative;
+    margin-left: auto;
+    display: block;
+    margin-right:auto;
+  }
+
+
+
+.diapo{
+  display: block;
+  position: relative;
+  margin-left: auto;
+  margin-right: auto;
+  /*MOBILE BODY*/
+}
+}
+/*MOBILE*/

@@ -1,0 +1,73 @@
+html{
+	font-family: arial;
+}
+/*BODY*/
+body{
+	margin: 0;
+	padding: 0;
+}
+#Gauche {
+	margin: 1em;
+	padding: 1em;
+	width: 21.4%;
+	/*border: solid;
+  border-color: silver;
+  border-width: 1%;
+  border-radius: 1em;*/
+  box-shadow: 5px 5px 5px 0 black;
+  border: 1px solid black;
+	float: left;
+	display: block;
+	margin-left: 40px;
+}
+#Droite{
+	margin: 1em;
+	padding: 1em;
+	width: 60%;
+	
+	/*border: solid;
+  border-color: silver;
+  border-width: 1%;
+  border-radius: 1em;*/
+  box-shadow: 5px 5px 5px 0 black;
+  border: 1px solid black;
+	float: left;
+	display: block;
+}
+.text{
+	margin-top: 1%;
+}
+
+/*MOBILE*/
+@media screen and (max-width: 56em){
+	#Gauche {
+	margin: 0em;
+	padding: 1em;
+	width: 82%;
+	border: solid;
+  	border-color: silver;
+  	border-width: 1%;
+  	border-radius: 1em;
+  	text-align: center;
+  	float: none;
+  	display: block;
+  	margin-right: auto;
+  	margin-left: auto;
+	
+}
+#Droite{
+margin: 0em;
+margin-top: 20px;
+	padding: 1em;
+	width: 82%;
+	border: solid;
+  border-color: silver;
+  border-width: 1%;
+  border-radius: 1em;
+	text-align: center;
+	float: none;
+  	display: block;
+  	margin-right: auto;
+  	margin-left: auto;
+}
+}
