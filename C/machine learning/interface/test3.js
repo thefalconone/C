@@ -1,12 +1,9 @@
-var exec = require('child_process').execFile;
+var execFile = require('child_process').execFile;
 
-var fun =function(){
-	console.log("fun() start");
-	exec('test.exe', function(err, data) {
-		console.log(err)
-		console.log(data.toString());
-	});
-	}
-
-
-fun();
+const child = execFile('test.exe', [], (error, stdout, stderr) => {
+    if (error) {
+        console.error('stderr', stderr);
+        throw error;
+    }
+    console.log('stdout', stdout);
+});
