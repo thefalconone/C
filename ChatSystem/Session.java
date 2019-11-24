@@ -3,17 +3,17 @@
 public class Session{
 
 	public ArrayList<Message> historique = new ArrayList<Message>();
-	public ArrayList<User> UserListSession = new ArrayList<User>();
+	public ArrayList<User> Participants = new ArrayList<User>();
 
-	Session(ArrayList<User> UserListSession){
-		this.UserListSession=UserListSession;
+	Session(ArrayList<User> Participants){
+		this.Participants=Participants;
 	}
 
 	ArrayList<Messages> getHistorique(){
 		return this.historique;
 	}
 
-	void recievedMsg(String txt){
+	void receivedMsg(String txt){
 		Message m = new Message(txt);
 		this.historique.add(m);
 		//à faire : update l'UI
@@ -21,7 +21,7 @@ public class Session{
 
 	void sendMsg(String txt){
 
-		for(User user : this.UserListSession){
+		for(User user : this.Participants){
 			send(user.getIP(), txt);
 		}
 	}
